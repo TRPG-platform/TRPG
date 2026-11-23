@@ -1,6 +1,6 @@
 ## 1. 專案骨架（已開票 #1、#2）
 
-- [ ] 1.1 （#1）依「單一 repo 分三個資料夾」與「技術選型已定案」建立前端、後端、共用型別三個 workspace，在 repo 根目錄執行 `npm run dev` 能同時啟動前後端；驗證：瀏覽器開得到前端預設頁，`GET /api/health` 回 `{ "ok": true }`
+- [x] 1.1 （#1）依「單一 repo 分三個資料夾」與「技術選型已定案」建立前端、後端、共用型別三個 workspace，在 repo 根目錄執行 `npm run dev` 能同時啟動前後端；驗證：瀏覽器開得到前端預設頁，`GET /api/health` 回 `{ "ok": true }`
 - [ ] 1.2 （#2）加入 ESLint 與 Prettier，`npm run lint` 與 `npm run build` 在前後端都能執行並通過；驗證：兩個指令在乾淨 clone 上執行成功 [after: 1.1]
 
 ## 2. 共用資料格式（已開票 #3、#7、#8、#9）

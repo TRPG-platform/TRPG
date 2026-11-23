@@ -1,0 +1,19 @@
+{
+  "name": "takoyaki",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "predev": "npm run build -w shared",
+    "dev": "concurrently -n server,client -c blue,magenta \"npm run dev -w server\" \"npm run dev -w client\"",
+    "build": "npm run build --workspaces"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.7",
+    "typescript": "^7.0.2"
+  }
+}
