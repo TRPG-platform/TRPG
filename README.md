@@ -26,3 +26,15 @@ npm run build
 ```
 
 依序建置 `shared` → `server` → `client`。
+
+## 程式碼檢查與排版
+
+```bash
+npm run lint          # ESLint 檢查 client / server / shared
+npm run format        # Prettier 自動排版
+npm run format:check  # 只檢查排版，不改檔（適合送 PR 前跑）
+```
+
+- 設定檔在 repo 根目錄：`eslint.config.js`、`.prettierrc.json`、`.prettierignore`。
+- 排版交給 Prettier（單引號、每行 100 字），ESLint 只管程式邏輯，兩者不衝突。
+- 建議在 VS Code 安裝 ESLint 與 Prettier 擴充套件，並開啟「存檔時自動排版」。
