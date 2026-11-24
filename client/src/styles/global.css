@@ -1,0 +1,27 @@
+/*
+ * 全站基本樣式：只套用設計變數，不寫任何色碼。
+ * 各功能自己的樣式請寫在各自的檔案，不要加在這裡。
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-weight: 400;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}

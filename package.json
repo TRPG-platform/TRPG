@@ -11,7 +11,7 @@
     "predev": "npm run build -w shared",
     "dev": "concurrently -n server,client -c blue,magenta \"npm run dev -w server\" \"npm run dev -w client\"",
     "build": "npm run build --workspaces",
-    "lint": "eslint .",
+    "lint": "eslint . && stylelint \"client/src/**/*.css\" --allow-empty-input",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -24,6 +24,7 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
     "prettier": "^3.5.0",
+    "stylelint": "^17.16.0",
     "typescript": "~6.0.0",
     "typescript-eslint": "^8.26.0"
   }

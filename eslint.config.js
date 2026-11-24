@@ -24,6 +24,20 @@ export default defineConfig(
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      // 禁止在 TS/TSX 寫死色碼（#4）：顏色一律用 client/src/styles/tokens.css 的 CSS 變數。
+      // CSS 檔的色碼由 Stylelint 檢查（見 .stylelintrc.json）。
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Literal[value=/#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\\b/]',
+          message: '不要寫死色碼，請改用 tokens.css 的 CSS 變數，例如 var(--color-text-primary)。',
+        },
+        {
+          selector:
+            'TemplateElement[value.raw=/#([0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\\b/]',
+          message: '不要寫死色碼，請改用 tokens.css 的 CSS 變數，例如 var(--color-text-primary)。',
+        },
+      ],
     },
   },
 

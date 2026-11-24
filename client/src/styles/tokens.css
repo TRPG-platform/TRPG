@@ -1,0 +1,41 @@
+/*
+ * 全站設計變數（design tokens）
+ *
+ * - 這是整個前端「唯一」可以寫色碼的檔案；其他檔案一律用 var(--變數名稱) 引用。
+ * - 數值來源：docs/design/figma/README.md 與
+ *   docs/spectra/changes/project-foundation/design.md 的 Design Source 表。
+ * - 標 TODO 的項目還沒和 Figma 確認，確認後再更新。
+ */
+:root {
+  /* ===== 顏色：背景 ===== */
+  --color-bg-page: #211b23; /* 頁面背景 */
+  --color-bg-deepest: #17131d; /* 最深背景  TODO: 確認用在哪些地方 */
+  --color-bg-panel: #2b2232; /* 面板背景 */
+  --color-bg-panel-raised: #40313b; /* 次要面板 TODO: 確認是浮起面板還是 hover */
+
+  /* ===== 顏色：邊框 ===== */
+  --color-border: #51405c;
+
+  /* ===== 顏色：文字 ===== */
+  --color-text-primary: #f5edf6; /* 主要文字 TODO: 確認 #EEE8F3、#FFFFFF 是否要統一 */
+  --color-text-secondary: #b7aabb; /* 次要文字 */
+
+  /* ===== 顏色：品牌 ===== */
+  /* 注意：主色紫在深色底上對比不足 4.5，不要拿來當小字文字色 */
+  --color-primary: #9972ad; /* 主色紫 */
+  --color-primary-button: #9566c2; /* 按鈕紫 */
+  --color-primary-light: #c4a0d3; /* 淺紫 */
+  --color-accent-gold: #e8d1a5; /* 強調金（GM、標題、選取狀態） */
+
+  /* ===== 顏色：狀態 ===== */
+  /* 狀態不能只靠顏色區分，要搭配圖示或文字（開發注意事項第 11 節） */
+  --color-success: #18da11; /* 成功綠 TODO: 確認和 #43866B 的分工 */
+
+  /* ===== 字型 ===== */
+  --font-body: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif; /* 內文 400 */
+  --font-heading: 'Noto Serif TC', 'PMingLiU', serif; /* 標題 700 */
+
+  /* ===== 圓角 ===== */
+  --radius-card: 12px; /* 卡片、面板 */
+  --radius-button: 8px; /* 按鈕、輸入框 */
+}
