@@ -54,3 +54,13 @@ npm run format:check  # 只檢查排版，不改檔（適合送 PR 前跑）
 - 寫樣式時一律用變數，例如 `background: var(--color-bg-panel);`、`border-radius: var(--radius-card);`。
 - **不要寫死色碼**：`tokens.css` 以外的 TS/TSX 或 CSS 出現 `#fff` 這類色碼，`npm run lint` 會報錯。
 - 需要新的顏色時，請開 PR 修改 `tokens.css`，不要在自己的檔案另外定義。
+
+## Spectra（規格驅動開發，選用）
+
+規格放在 `docs/spectra/specs/`，功能提案放在 `docs/spectra/changes/`。只想看規格的話，直接打開這兩個資料夾即可，不用安裝任何東西。
+
+想在 Claude Code 裡用 `/spectra-*` 指令（例如 `/spectra-apply`）的話：
+
+- 要先在自己電腦安裝 Spectra，沒安裝時指令會失敗。
+- 指令定義在 `.claude/skills/`，流程說明在根目錄的 `CLAUDE.md`。這些是工具產生的檔案，請不要手動修改，也不要拿 Prettier 重新排版。
+- `/spectra-archive` 會直接改 `docs/spectra/specs/`。**改規格前請先在群組講一聲**，不要自己合併規格。
