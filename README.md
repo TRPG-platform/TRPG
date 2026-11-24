@@ -19,6 +19,15 @@ npm run dev
 - 後端健康檢查：http://localhost:3001/api/health → `{ "ok": true }`
 - 前端的 `/api/*` 會自動轉給後端，前端程式直接 `fetch('/api/...')` 即可。
 
+## 前端資料來源
+
+未設定時使用 `api`，沿用後端連線檢查。要單獨開前端，請將
+`client/.env.example` 複製成 `client/.env`，保留 `VITE_DATA_SOURCE=mock`，
+再從根目錄執行 `npm run dev -w client`。改成 `api` 後請重啟 Vite。
+
+前端透過 `client/src/data/` 讀資料。後端目前提供 `/api/health`；
+劇本、角色及房間 API 由各功能票接上。
+
 ## 建置
 
 ```bash
