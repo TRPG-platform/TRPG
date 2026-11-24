@@ -1,0 +1,11 @@
+{
+  "ignoreFiles": ["client/src/styles/tokens.css"],
+  "rules": {
+    "color-no-hex": [
+      true,
+      {
+        "message": "不要寫死色碼，請改用 tokens.css 的 CSS 變數，例如 var(--color-text-primary)。"
+      }
+    ]
+  }
+}
