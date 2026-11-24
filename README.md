@@ -59,8 +59,14 @@ npm run format:check  # 只檢查排版，不改檔（適合送 PR 前跑）
 
 規格放在 `docs/spectra/specs/`，功能提案放在 `docs/spectra/changes/`。只想看規格的話，直接打開這兩個資料夾即可，不用安裝任何東西。
 
-想在 Claude Code 裡用 `/spectra-*` 指令（例如 `/spectra-apply`）的話：
+想用 Spectra 指令的話，要先在自己電腦安裝 Spectra，沒安裝時指令會失敗。
 
-- 要先在自己電腦安裝 Spectra，沒安裝時指令會失敗。
-- 指令定義在 `.claude/skills/`，流程說明在根目錄的 `CLAUDE.md`。這些是工具產生的檔案，請不要手動修改，也不要拿 Prettier 重新排版。
-- `/spectra-archive` 會直接改 `docs/spectra/specs/`。**改規格前請先在群組講一聲**，不要自己合併規格。
+| AI 工具     | 讀哪個說明檔 | 指令放哪裡        | 指令怎麼打       |
+| ----------- | ------------ | ----------------- | ---------------- |
+| Claude Code | `CLAUDE.md`  | `.claude/skills/` | `/spectra-apply` |
+| Codex       | `AGENTS.md`  | `.agents/skills/` | `$spectra-apply` |
+
+- 上面這些都是工具產生的檔案，請不要手動修改，也不要拿 Prettier 重新排版。Spectra 改版時用 `spectra update` 一次更新。
+- Copilot、Cursor 等工具也會讀 `AGENTS.md`，所以用這些工具時，AI 也會照 Spectra 流程走。
+- `AGENTS.md` 目前只有 Spectra 說明。團隊開發規範開會定案後，補在檔案最下面的團隊區（`SPECTRA:END` 標記下面），寫在標記裡面會被 Spectra 更新蓋掉。
+- `/spectra-archive`（Codex 是 `$spectra-archive`）會直接改 `docs/spectra/specs/`。**改規格前請先在群組講一聲**，不要自己合併規格。
