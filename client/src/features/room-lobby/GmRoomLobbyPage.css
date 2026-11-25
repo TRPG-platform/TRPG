@@ -1,0 +1,6 @@
+.gm-lobby-page__message {
+  margin: 0;
+  padding: 120px 24px;
+  color: var(--color-text-secondary);
+  text-align: center;
+}

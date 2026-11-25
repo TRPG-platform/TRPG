@@ -1,0 +1,38 @@
+.ready-bar {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  min-height: 80px;
+  padding: 12px 64px 12px 24px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-bg-deepest);
+}
+
+.ready-bar__icon {
+  flex: none;
+  color: var(--color-accent-gold);
+}
+
+.ready-bar__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.ready-bar__title {
+  margin: 0;
+  color: var(--color-accent-gold);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.ready-bar__summary {
+  margin: 2px 0 0;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.ready-bar__action {
+  flex: none;
+}

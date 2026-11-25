@@ -1,0 +1,144 @@
+.player-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--color-bg-panel);
+}
+
+.player-list__title {
+  flex: none;
+  margin: 0;
+  padding: 16px 12px;
+  background: var(--color-bg-panel-raised);
+  font-family: var(--font-body);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 28px;
+}
+
+.player-list__items {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  margin: 0;
+  padding: 10px 2px;
+  overflow-y: auto;
+  list-style: none;
+  scrollbar-color: var(--color-border) transparent;
+  scrollbar-width: thin;
+}
+
+.player-list__items:focus-visible {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: -2px;
+}
+
+.player-row {
+  display: flex;
+  flex: none;
+  gap: 10px;
+  align-items: center;
+  min-height: 72px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: var(--color-bg-page);
+}
+
+.player-row__avatar-wrap {
+  position: relative;
+  flex: none;
+}
+
+.player-row__avatar {
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-text-secondary);
+  object-fit: cover;
+}
+
+.player-row__presence {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--color-bg-page);
+  border-radius: 50%;
+  background: var(--color-text-secondary);
+}
+
+.player-row__presence--online {
+  background: var(--color-success);
+}
+
+.player-row__info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+}
+
+.player-row__badge {
+  padding: 0 4px;
+  border-radius: 2px;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 13px;
+}
+
+.player-row__badge--gm {
+  background: var(--color-accent-gold);
+  color: var(--color-bg-deepest);
+}
+
+.player-row__badge--pl {
+  background: var(--color-primary);
+  color: var(--color-text-primary);
+}
+
+.player-row__name {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-row__ready {
+  display: inline-flex;
+  flex: none;
+  gap: 3px;
+  align-items: center;
+  color: var(--color-success);
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.player-row__ready::before {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentcolor;
+  content: '';
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

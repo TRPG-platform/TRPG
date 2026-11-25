@@ -1,0 +1,19 @@
+.lobby-notice {
+  position: fixed;
+  bottom: 124px;
+  left: 50%;
+  z-index: 10;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.lobby-notice__message {
+  margin: 0;
+  padding: 10px 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  background: var(--color-bg-panel-raised);
+  color: var(--color-text-primary);
+  font-size: 14px;
+  white-space: nowrap;
+}
