@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getHealth, getMockPreview } from './data';
+import CharactersPage from './features/characters/CharactersPage';
 
 type Status = 'checking' | 'ok' | 'error';
 
@@ -11,7 +12,12 @@ const MESSAGES: Record<Status, string> = {
 
 const mockPreview = getMockPreview();
 
+// TODO(#5)：裝好 React Router 後改用路由；目前 /characters 以外的網址先顯示原本的連線狀態頁。
 export default function App() {
+  return window.location.pathname === '/characters' ? <CharactersPage /> : <StatusPage />;
+}
+
+function StatusPage() {
   const [status, setStatus] = useState<Status>('checking');
 
   useEffect(() => {
@@ -39,7 +45,9 @@ export default function App() {
             {mockPreview.script.sceneCount} 場景）
           </dd>
           <dt>角色</dt>
-          <dd>{mockPreview.character.name}（{mockPreview.character.occupation}）</dd>
+          <dd>
+            {mockPreview.character.name}（{mockPreview.character.occupation}）
+          </dd>
           <dt>房號</dt>
           <dd>{mockPreview.room.roomCode}</dd>
         </dl>

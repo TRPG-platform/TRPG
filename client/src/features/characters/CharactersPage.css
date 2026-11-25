@@ -1,0 +1,1133 @@
+/*
+ * 我的角色卡＋角色卡編輯器（筆記本）。
+ * 顏色只用 tokens.css 的設計變數；需要半透明時用 color-mix(… transparent) 調同一個顏色的透明度。
+ * 筆記本內部以 1929×1054 的固定座標排版（對齊 notebook.webp 的紙張位置），再整體縮放。
+ */
+@import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC&family=Noto+Serif+TC:wght@400;600;700&family=Special+Elite&display=swap');
+
+/* 整頁固定為視窗高度：導覽列、標題列照內容高度，筆記本外框拿剩下的空間 */
+.characters-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+}
+
+.characters {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+
+  /* 字型：手寫數值、英文小標（設計稿 character-card design.md） */
+  --font-hand: 'LXGW WenKai TC', 'Kaiti TC', 'STKaiti', serif;
+  --font-type: 'Special Elite', 'Courier New', monospace;
+  --font-paper: 'Noto Serif TC', 'Songti TC', serif;
+
+  /* 紙上用色：全部取自 tokens.css */
+  --paper-ink: var(--color-bg-panel-raised); /* 文字深色 #40313B */
+  --paper-ink-strong: var(--color-bg-page);
+  --paper-accent: var(--color-primary);
+  --paper-accent-strong: var(--color-primary-button);
+  --paper-rule: var(--color-border);
+  --paper-line: var(--color-text-secondary);
+  --paper-slot: var(--color-text-primary);
+  --paper-gold: var(--color-accent-gold);
+  --paper-shadow: color-mix(in srgb, var(--color-bg-deepest) 30%, transparent);
+
+  overflow-x: clip;
+}
+
+/* ===== 頁面頂部 ===== */
+.characters__top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px max(3vw, 14px);
+}
+
+.characters__title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: baseline;
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  color: var(--color-text-primary);
+}
+
+.characters__title small {
+  font: 20px var(--font-hand);
+  color: var(--color-accent-gold);
+}
+
+.characters__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.characters__search {
+  width: min(320px, 70vw);
+  min-height: 40px;
+  padding: 6px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  background: var(--color-bg-panel);
+  color: var(--color-text-primary);
+  font: inherit;
+}
+
+.characters__save-state {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.characters__button {
+  min-height: 40px;
+  padding: 6px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  background: var(--color-bg-panel-raised);
+  color: var(--color-text-primary);
+  font: inherit;
+  cursor: pointer;
+}
+
+.characters__button:hover:not(:disabled) {
+  border-color: var(--color-accent-gold);
+}
+
+.characters__button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.characters__button--primary {
+  border-color: var(--color-primary-button);
+  background: var(--color-primary-button);
+}
+
+:where(.characters) :focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ===== 縮放外框 ===== */
+.characters__fit {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  padding: 0 8px 12px;
+}
+
+.characters__frame {
+  position: relative;
+  margin: 0 auto;
+}
+
+.characters__stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 1929px;
+  height: 1054px;
+  transform-origin: 0 0;
+}
+
+/* ===== 筆記本與右側分頁 ===== */
+.notebook {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: 1873px;
+  height: 1054px;
+  background: 0 0 / 100% 100% no-repeat;
+  color: var(--paper-ink);
+  color-scheme: light;
+  font: 16px/1.5 var(--font-paper);
+}
+
+.notebook__tabs {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-left: -34px;
+  padding-top: 168px;
+}
+
+.notebook__tab {
+  min-width: 58px;
+  padding: 14px 12px 14px 22px;
+  border: 0;
+  border-radius: 0 10px 10px 0;
+  background: var(--color-border);
+  box-shadow: inset 6px 0 8px -4px var(--paper-shadow);
+  color: var(--color-accent-gold);
+  font: 19px var(--font-paper);
+  letter-spacing: 0.15em;
+  writing-mode: vertical-rl;
+  cursor: pointer;
+}
+
+.notebook__tab[aria-selected='true'] {
+  background: var(--color-primary);
+  color: var(--color-text-primary);
+  transform: translateX(8px);
+}
+
+.notebook__tab:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ===== 紙頁 ===== */
+.sheet {
+  position: absolute;
+  inset: 0;
+}
+
+.sheet__page {
+  position: absolute;
+  top: 110px;
+  width: 744px;
+  height: 829px;
+  margin: 0;
+  padding: 0 6px 0 4px;
+  overflow: hidden;
+}
+
+.sheet__page:first-child {
+  left: 157px;
+}
+
+.sheet__page:nth-child(2) {
+  left: 1012px;
+}
+
+.sheet__page--scroll {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--paper-line) transparent;
+}
+
+.sheet__page:first-child > .sheet__heading {
+  padding-left: 72px;
+}
+
+.sheet__page:nth-child(2) > .sheet__heading {
+  padding-left: 18px;
+}
+
+.sheet__eyebrow {
+  margin: 0;
+  font: 14px var(--font-type);
+  letter-spacing: 0.06em;
+  color: var(--paper-accent);
+}
+
+.sheet__title {
+  margin: 2px 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--paper-rule);
+  font-size: 26px;
+  line-height: 1.1;
+  color: var(--paper-ink-strong);
+}
+
+.sheet__group {
+  margin-top: 4px;
+}
+
+.sheet__group-title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 20px 0 10px;
+  font-size: 19px;
+  color: var(--paper-ink-strong);
+}
+
+.sheet__group-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--paper-line);
+}
+
+.sheet__note {
+  margin: 0 0 10px;
+  font-size: 15px;
+  color: var(--paper-ink);
+}
+
+.sheet__alert {
+  margin: 0 0 10px;
+  padding: 6px 10px;
+  border-left: 4px solid var(--paper-accent-strong);
+  font-weight: 700;
+  color: var(--paper-ink-strong);
+}
+
+/* ===== 表單欄位 ===== */
+.stack {
+  display: grid;
+  gap: 12px;
+}
+
+.stack--spaced {
+  margin-top: 12px;
+}
+
+.grid-2,
+.grid-3 {
+  display: grid;
+  gap: 12px;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.field {
+  display: grid;
+  gap: 3px;
+  font-size: 16px;
+}
+
+.field__input,
+.cell input,
+.cell select {
+  width: 100%;
+  min-height: 44px;
+  padding: 7px 10px;
+  border: 1px solid var(--paper-line);
+  border-bottom: 2px solid var(--paper-rule);
+  border-radius: 6px 6px 2px 2px;
+  background: var(--paper-slot);
+  color: var(--paper-ink-strong);
+  font: 20px/1.3 var(--font-hand);
+}
+
+.field__input--lined {
+  min-height: 0;
+  resize: none;
+  font-size: 18px;
+  line-height: 29px;
+}
+
+.field__input:focus,
+.cell input:focus,
+.cell select:focus {
+  outline: none;
+  border-color: var(--paper-accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--paper-accent) 35%, transparent);
+}
+
+.paper-button,
+.add-button,
+.remove-button {
+  border: 1px solid var(--paper-line);
+  border-radius: var(--radius-button);
+  background: var(--paper-slot);
+  color: var(--paper-ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.paper-button {
+  min-height: 40px;
+  padding: 4px 14px;
+}
+
+.paper-button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.add-button {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 10px;
+  border-style: dashed;
+  background: transparent;
+}
+
+.remove-button {
+  width: 40px;
+  height: 40px;
+}
+
+/* ===== 調查員（總覽）：拍立得照片牆，照桌面「調查員檔案」原型 ===== */
+/* 標題下方剩下的空間給照片牆，4×3 在這塊空間裡上下置中 */
+.sheet__page--roster {
+  display: flex;
+  flex-direction: column;
+}
+
+.roster {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-content: center;
+  gap: 36px 0;
+  justify-items: center;
+}
+
+.polaroid {
+  position: relative;
+  display: block;
+  width: 118px;
+  padding: 7px 7px 28px;
+  border: 0;
+  background: var(--paper-slot);
+  box-shadow:
+    0 2px 0 var(--paper-line),
+    0 6px 10px -6px var(--paper-shadow);
+  color: inherit;
+  font: inherit;
+  transform: rotate(var(--tilt, 0deg));
+  cursor: pointer;
+}
+
+.polaroid:hover {
+  transform: rotate(var(--tilt, 0deg)) translateY(-3px);
+}
+
+/* 紙膠帶 */
+.polaroid::before,
+.polaroid::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 12px;
+  background: color-mix(in srgb, var(--paper-accent) 60%, transparent);
+}
+
+.polaroid::before {
+  top: -5px;
+  left: -12px;
+  transform: rotate(-26deg);
+}
+
+.polaroid::after {
+  right: -12px;
+  bottom: -3px;
+  transform: rotate(-22deg);
+}
+
+.polaroid--selected {
+  outline: 2px solid var(--paper-accent);
+  outline-offset: 4px;
+}
+
+.polaroid__photo {
+  display: grid;
+  place-items: end center;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--paper-line);
+  color: var(--paper-slot);
+}
+
+.polaroid__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.silhouette {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.polaroid__name {
+  position: absolute;
+  right: 4px;
+  bottom: 6px;
+  left: 4px;
+  overflow: hidden;
+  font: 14px var(--font-paper);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+  color: var(--paper-accent);
+}
+
+.polaroid--add {
+  border: 2px dashed var(--paper-line);
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+}
+
+.polaroid--add::before,
+.polaroid--add::after {
+  display: none;
+}
+
+.polaroid--add:hover {
+  transform: translateY(-3px);
+}
+
+.polaroid--add .polaroid__photo {
+  place-items: center;
+  background: color-mix(in srgb, var(--paper-gold) 60%, transparent);
+  color: var(--paper-ink);
+  font:
+    300 44px/1 system-ui,
+    sans-serif;
+}
+
+.roster__nav {
+  position: absolute;
+  right: 0;
+  bottom: 10px;
+  left: 72px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== 身分 ===== */
+.portrait {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 3 / 4;
+  margin: 0 auto 18px;
+  padding: 14px 14px 40px;
+  border: 0;
+  background: var(--paper-slot);
+  box-shadow: 0 2px 0 var(--paper-line);
+  transform: rotate(1.5deg);
+  cursor: pointer;
+}
+
+.portrait::before,
+.portrait::after {
+  content: '';
+  position: absolute;
+  width: 76px;
+  height: 22px;
+  background: color-mix(in srgb, var(--paper-accent) 55%, transparent);
+}
+
+.portrait::before {
+  top: -6px;
+  left: -18px;
+  transform: rotate(-26deg);
+}
+
+.portrait::after {
+  right: -18px;
+  bottom: -4px;
+  transform: rotate(-22deg);
+}
+
+.portrait__photo {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--paper-line);
+  color: var(--paper-slot);
+  font-size: 15px;
+}
+
+.portrait__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.portrait__caption {
+  position: absolute;
+  right: 0;
+  bottom: 10px;
+  left: 0;
+  font: 16px var(--font-hand);
+  text-align: center;
+  color: var(--paper-accent);
+}
+
+.id-card {
+  position: relative;
+  margin-left: 72px;
+  padding: 12px 22px 16px;
+  border: 1px solid var(--paper-line);
+  background: var(--paper-slot);
+  box-shadow: 3px 4px 0 var(--paper-line);
+  transform: rotate(-0.6deg);
+}
+
+.id-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  border-bottom: 3px double var(--paper-rule);
+  font: 14px var(--font-type);
+  letter-spacing: 0.06em;
+  color: var(--paper-accent);
+}
+
+.id-card__number,
+.id-card__foot input {
+  border: 0;
+  border-bottom: 1px dashed var(--paper-rule);
+  background: transparent;
+  color: var(--paper-ink-strong);
+  font: 17px var(--font-type);
+}
+
+.id-card__number {
+  width: 72px;
+  text-align: center;
+}
+
+.id-card__line {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 12px;
+  align-items: end;
+  margin-top: 14px;
+}
+
+.id-card__line span {
+  padding-bottom: 6px;
+  white-space: nowrap;
+}
+
+.id-card__line em {
+  margin-left: 8px;
+  font: 13px var(--font-type);
+  font-style: normal;
+  letter-spacing: 0.08em;
+}
+
+.id-card__line input {
+  width: 100%;
+  min-height: 40px;
+  padding: 0 6px 3px;
+  border: 0;
+  border-bottom: 1.5px solid var(--paper-rule);
+  background: transparent;
+  color: var(--paper-ink-strong);
+  font: 24px/1.2 var(--font-hand);
+}
+
+.id-card__line--big input {
+  font-size: 42px;
+  letter-spacing: 0.25em;
+}
+
+.id-card__foot {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  font-size: 14px;
+}
+
+.id-card__foot input {
+  width: 130px;
+}
+
+.id-card__seal {
+  padding: 2px 10px;
+  border: 2px solid var(--paper-accent);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--paper-accent);
+  transform: rotate(-6deg);
+}
+
+/* ===== 數值 ===== */
+.attributes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding-left: 72px;
+}
+
+.attribute,
+.gauge,
+.derived > div,
+.points__box {
+  border: 1px solid var(--paper-line);
+  border-radius: 8px;
+  background: var(--paper-slot);
+}
+
+.attribute {
+  padding: 10px 12px;
+}
+
+.attribute--invalid {
+  border: 2px solid var(--paper-accent-strong);
+}
+
+.attribute__head,
+.gauge__head {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.attribute__head b,
+.gauge__head b {
+  font: 20px var(--font-type);
+  color: var(--paper-accent);
+}
+
+.attribute__value {
+  margin: 6px 0 2px;
+  font: 46px/1.05 var(--font-hand);
+  color: var(--paper-ink-strong);
+}
+
+.attribute__levels {
+  font-size: 15px;
+}
+
+.attribute__levels b {
+  font: 20px var(--font-hand);
+  color: var(--paper-ink-strong);
+}
+
+.attribute__gap {
+  display: inline-block;
+  width: 1em;
+}
+
+.attribute__inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.attribute__inputs label {
+  display: grid;
+  gap: 1px;
+  font-size: 14px;
+}
+
+.attribute__inputs input {
+  width: 100%;
+  min-height: 38px;
+  padding: 3px 6px;
+  border: 1px solid var(--paper-line);
+  border-bottom: 2px solid var(--paper-rule);
+  border-radius: 5px;
+  background: var(--color-text-primary);
+  color: var(--paper-ink-strong);
+  font: 20px var(--font-hand);
+  text-align: center;
+}
+
+.attributes + .sheet__group-title,
+.attributes ~ .sheet__note {
+  margin-left: 72px;
+}
+
+.gauges {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 12px 18px;
+}
+
+.gauge {
+  padding: 10px 14px;
+}
+
+.gauge__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.gauge__controls button {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--paper-line);
+  border-radius: 50%;
+  background: var(--color-text-primary);
+  color: var(--paper-ink-strong);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.gauge__controls button:hover {
+  border-color: var(--paper-accent);
+  color: var(--paper-accent);
+}
+
+.gauge__input {
+  width: 84px;
+  padding: 0;
+  border: 0;
+  border-bottom: 2px solid var(--paper-rule);
+  background: transparent;
+  color: var(--paper-ink-strong);
+  font: 34px var(--font-hand);
+  text-align: center;
+}
+
+.gauge__max {
+  font: 22px var(--font-hand);
+  white-space: nowrap;
+}
+
+.gauge__bar {
+  flex-basis: 100%;
+  height: 14px;
+  overflow: hidden;
+  border: 1px solid var(--paper-line);
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--paper-gold) 50%, transparent);
+}
+
+.gauge__bar i {
+  display: block;
+  height: 100%;
+  background: var(--paper-accent);
+  transition: width 0.25s;
+}
+
+.gauge__bar--low i {
+  background: var(--paper-ink);
+}
+
+.derived {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 4px 0 6px 18px;
+}
+
+.derived > div {
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.derived small {
+  display: block;
+  font-size: 15px;
+}
+
+.derived b {
+  font: 30px var(--font-hand);
+  color: var(--paper-ink-strong);
+}
+
+.sheet__page:nth-child(2) > .sheet__group-title,
+.sheet__page:nth-child(2) > .chips,
+.sheet__page:nth-child(2) > .stack,
+.sheet__page:nth-child(2) > .sheet__alert,
+.sheet__page:nth-child(2) > .sheet__note {
+  margin-left: 18px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  min-height: 42px;
+  padding: 6px 16px;
+  border: 1px solid var(--paper-line);
+  border-radius: 20px;
+  background: var(--paper-slot);
+  color: var(--paper-ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+.chip[aria-pressed='true'] {
+  border-color: var(--paper-accent);
+  background: var(--paper-accent);
+  color: var(--color-text-primary);
+}
+
+/* ===== 技能 ===== */
+.points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 10px 72px;
+}
+
+.points__box {
+  flex: 1 1 170px;
+  padding: 8px 12px;
+  font-size: 15px;
+}
+
+.points__box small {
+  display: block;
+}
+
+.points__box b {
+  font: 24px var(--font-hand);
+  color: var(--paper-ink-strong);
+}
+
+.points__box--over {
+  border: 2px solid var(--paper-accent-strong);
+}
+
+.skill-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin: 0 0 6px 72px;
+}
+
+.skill-tools input[type='search'] {
+  flex: 1 1 180px;
+  min-height: 44px;
+  padding: 6px 12px;
+  border: 1px solid var(--paper-line);
+  border-radius: var(--radius-button);
+  background: var(--paper-slot);
+  color: var(--paper-ink-strong);
+  font: inherit;
+}
+
+.skill-tools label {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.sheet__page:first-child > .skill-row,
+.sheet__page:first-child > .sheet__group,
+.sheet__page:first-child > .sheet__alert {
+  margin-left: 72px;
+}
+
+.skill-row {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) repeat(4, 46px) 52px 46px;
+  gap: 5px;
+  align-items: center;
+  padding: 3px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper-line) 60%, transparent);
+}
+
+.skill-row--head {
+  border-bottom: 2px solid var(--paper-rule);
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--paper-accent);
+}
+
+.skill-row--head span:nth-child(2) {
+  text-align: left;
+}
+
+.skill-row input[type='checkbox'] {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--paper-accent);
+}
+
+.skill-row > input:not([type='checkbox']) {
+  width: 100%;
+  min-height: 36px;
+  padding: 2px;
+  border: 1px solid var(--paper-line);
+  border-radius: 4px;
+  background: var(--paper-slot);
+  color: var(--paper-ink-strong);
+  font: 19px var(--font-hand);
+  text-align: center;
+}
+
+.skill-row__name {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 18.5px;
+  font-weight: 600;
+  color: var(--paper-ink-strong);
+}
+
+.skill-row__name input {
+  flex: 1;
+  min-width: 0;
+  min-height: 32px;
+  padding: 2px 6px;
+  border: 1px solid var(--paper-line);
+  border-radius: 4px;
+  background: var(--paper-slot);
+  color: var(--paper-ink-strong);
+  font: 18px var(--font-hand);
+}
+
+.skill-row__base {
+  font-weight: 600;
+  text-align: center;
+}
+
+.skill-row__final {
+  font: 26px var(--font-hand);
+  text-align: center;
+  color: var(--paper-ink-strong);
+}
+
+.skill-row__levels {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.skill-row--dim .skill-row__final {
+  opacity: 0.7;
+}
+
+/* ===== 裝備、紀錄 ===== */
+.weapons {
+  display: grid;
+  gap: 8px;
+}
+
+.weapon,
+.relation {
+  display: grid;
+  gap: 4px 8px;
+  align-items: end;
+  padding: 6px 8px;
+  border: 1px solid var(--paper-line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--paper-slot) 70%, transparent);
+}
+
+.weapon {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) 40px;
+}
+
+.weapon .cell--wide {
+  grid-column: span 2;
+}
+
+.weapon .cell:nth-child(3) {
+  grid-column: span 2;
+}
+
+.relation {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr) 40px;
+}
+
+.cell {
+  display: grid;
+  gap: 2px;
+  font-size: 14px;
+}
+
+.cell input,
+.cell select {
+  min-height: 36px;
+  padding: 3px 8px;
+  font-size: 18px;
+}
+
+.weapon__levels {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 38px;
+  font: 20px var(--font-hand);
+  color: var(--paper-ink-strong);
+}
+
+.weapon__levels em {
+  font-size: 14px;
+  font-style: normal;
+}
+
+.sheet__page:first-child > .weapons,
+.sheet__page:first-child > .add-button,
+.sheet__page:first-child > .stack,
+.sheet__page:first-child > .sheet__note,
+.sheet__page:first-child > .sheet__group-title {
+  margin-left: 72px;
+  width: calc(100% - 72px);
+}
+
+/* ===== 確認視窗 ===== */
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: color-mix(in srgb, var(--color-bg-deepest) 70%, transparent);
+}
+
+.dialog {
+  width: min(480px, 100%);
+  padding: 20px 24px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-bg-panel);
+  color: var(--color-text-primary);
+}
+
+.dialog h2 {
+  margin: 0 0 12px;
+  font-size: 22px;
+}
+
+.dialog__error {
+  font-weight: 700;
+  color: var(--color-accent-gold);
+}
+
+.dialog__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .polaroid,
+  .gauge__bar i {
+    transition: none;
+  }
+}
