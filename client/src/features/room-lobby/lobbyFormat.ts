@@ -14,3 +14,11 @@ export function formatSchedule(iso: string): string {
   const minutes = String(date.getMinutes()).padStart(2, '0');
   return `${date.getMonth() + 1} / ${date.getDate()}（${WEEKDAYS[date.getDay()]}）${hours}:${minutes}`;
 }
+
+/** 公告編輯時間，例如「11 / 12 18:32」，使用瀏覽器的時區。 */
+export function formatDateTime(iso: string): string {
+  const date = new Date(iso);
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${date.getMonth() + 1} / ${date.getDate()} ${hours}:${minutes}`;
+}

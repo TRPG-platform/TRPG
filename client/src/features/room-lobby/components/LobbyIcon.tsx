@@ -37,6 +37,28 @@ const PATHS = {
     />
   ),
   chevronDown: <path d="M6 9l6 6 6-6" />,
+  heart: (
+    <path
+      d="M12 20s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 10c0 5.65-7 10-7 10z"
+      fill="currentColor"
+      stroke="none"
+    />
+  ),
+  brain: (
+    <>
+      <path
+        d="M11 4.5a3.5 3.5 0 0 0-6.5 1.8A3.5 3.5 0 0 0 4 12.5a3.5 3.5 0 0 0 3 5.4A3 3 0 0 0 11 19.5z"
+        fill="currentColor"
+        stroke="none"
+      />
+      <path
+        d="M13 4.5a3.5 3.5 0 0 1 6.5 1.8 3.5 3.5 0 0 1 .5 6.2 3.5 3.5 0 0 1-3 5.4 3 3 0 0 1-4 1.6z"
+        fill="currentColor"
+        stroke="none"
+      />
+    </>
+  ),
+  arrowUpRight: <path d="M7 17L17 7M8 7h9v9" />,
 } as const;
 
 export type LobbyIconName = keyof typeof PATHS;
