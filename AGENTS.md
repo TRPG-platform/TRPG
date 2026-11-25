@@ -101,7 +101,16 @@ components/  共用元件
 - 發 PR 前先同步 `dev`，並確認 `npm run build` 能過。【試行】
 - 至少一位組員看過才合併；PR 描述寫 `Closes #票號`。【試行】
 - 做一小段就發 PR，不要累積一週。【試行】
-- Commit 格式：`類型(範圍): 描述`，類型用英文、描述可以寫中文，例如 `feat(lobby): 新增房間列表`。PR 標題也用同樣格式。【試行】
+- Commit 採用 Conventional Commits（約定式提交規範），格式為 `type(scope): description`。【試行】
+  - `scope` 可以省略。
+  - `type` 用英文，`description` 可以寫中文。
+  - 常用類型：`feat`、`fix`、`docs`、`style`、`refactor`、`test`、`chore`、`build`。
+  - PR 標題也用同樣格式。
+  - 範例：
+    - `feat(lobby): 新增房間大廳`
+    - `fix(login): 修正登入驗證`
+    - `docs(agents): 新增團隊開發規範`
+    - `refactor(navbar): 重構導覽列元件`
 - 多人做同一頁時怎麼分工、怎麼避免改到同一個檔案。【待討論】
 
 ## 7. AI 修改限制【試行】
