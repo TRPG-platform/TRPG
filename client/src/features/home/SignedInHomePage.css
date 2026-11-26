@@ -106,9 +106,42 @@
   padding: 48px 0 56px;
 }
 
-.recruiting__title {
+/* 標題＋排序選單同一列，選單靠右；左右邊距和卡片列相同，標題對齊第一張卡片 */
+.recruiting__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: center;
+  justify-content: space-between;
   margin: 0 0 22px;
-  padding-left: clamp(24px, 10.9vw, 140px);
+  padding: 0 43px;
+}
+
+.recruiting__sort {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 15px;
+  color: var(--color-text-secondary);
+}
+
+.recruiting__sort select {
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  background: var(--color-bg-panel);
+  font: inherit;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.recruiting__sort select:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.recruiting__title {
+  margin: 0;
   font-size: 32px;
   letter-spacing: 0.04em;
   color: var(--color-text-primary);
@@ -120,7 +153,7 @@
 }
 
 .recruiting__empty {
-  padding-left: clamp(24px, 10.9vw, 140px);
+  padding-left: 43px;
 }
 
 .recruiting__row {

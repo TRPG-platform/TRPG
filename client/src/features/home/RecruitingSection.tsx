@@ -1,9 +1,19 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { getRecruitingRooms, type RecruitingRoom } from '../../data/recruiting';
+import {
+  getRecruitingRooms,
+  type RecruitingRoom,
+  type RecruitingSort,
+} from '../../data/recruiting';
 
-// 近期開團（home-page「Upcoming recruiting games」）：最多 4 張卡片，橫向捲動。
-// 篩選與排序由 GET /api/rooms/recruiting 在伺服器端做，這裡照回傳順序顯示。
+// 近期開團（home-page「Upcoming recruiting games」）：不限張數，橫向捲動。
+// 標題旁的選單切換排序（建立時間／開團時間）；篩選與排序由伺服器端做，這裡照回傳順序顯示。
+
+// 遊玩時間：開團時間最近的在前；房間建立時間：最新建立的在前。
+const SORT_OPTIONS: { value: RecruitingSort; label: string }[] = [
+  { value: 'scheduled', label: '遊玩時間' },
+  { value: 'created', label: '房間建立時間' },
+];
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
 
@@ -63,25 +73,41 @@ function RecruitingCard({ room }: { room: RecruitingRoom }) {
 }
 
 export default function RecruitingSection() {
+  const [sort, setSort] = useState<RecruitingSort>('scheduled');
   const [rooms, setRooms] = useState<RecruitingRoom[] | null>(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
     const controller = new AbortController();
-    getRecruitingRooms(controller.signal)
-      .then(setRooms)
+    getRecruitingRooms(sort, controller.signal)
+      .then((list) => {
+        setError('');
+        setRooms(list);
+      })
       .catch((reason: unknown) => {
         if (!controller.signal.aborted)
           setError(reason instanceof Error ? reason.message : '讀取近期開團失敗');
       });
     return () => controller.abort();
-  }, []);
+  }, [sort]);
 
   return (
     <section className="recruiting" aria-labelledby="recruiting-title">
-      <h2 id="recruiting-title" className="recruiting__title">
-        近期開團
-      </h2>
+      <div className="recruiting__header">
+        <h2 id="recruiting-title" className="recruiting__title">
+          近期開團
+        </h2>
+        <label className="recruiting__sort">
+          排序
+          <select value={sort} onChange={(event) => setSort(event.target.value as RecruitingSort)}>
+            {SORT_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
       {error ? (
         <p className="recruiting__message">{error}</p>
       ) : rooms === null ? (
