@@ -30,14 +30,34 @@ function sectionFromPath(pathname: string): NavSection | null {
 interface TopNavProps {
   /** 目前所在區塊；不傳時依網址判斷。 */
   current?: NavSection | null;
+  /**
+   * 頁面在子畫面（編輯、詳細資訊、新增表單…）時傳入，返回鍵改成執行它，回到該區塊的總覽。
+   * 已經在總覽時不要傳，返回鍵就回到上一頁。
+   */
+  onBack?: () => void;
 }
 
-export default function TopNav({ current }: TopNavProps) {
+// 返回鍵規則（團隊決定，規格沒有）：
+// - 在區塊的子畫面 → 回到該區塊總覽（頁面傳 onBack）
+// - 已經在總覽 → 回到上一頁
+// - 首頁 / 不顯示返回鍵（除非首頁自己傳了 onBack）
+export default function TopNav({ current, onBack }: TopNavProps) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const section = current === undefined ? sectionFromPath(pathname) : current;
-  // 返回鍵：首頁（登入前、登入後都是 /）不顯示，其他頁面都顯示，一律回首頁。
-  const showBack = pathname !== '/';
+  const showBack = onBack !== undefined || pathname !== '/';
+
+  // React Router 會在 history.state 記下這是站內第幾頁；idx 為 0 代表直接開這個網址
+  // （例如貼上連結），沒有站內上一頁，這時改回首頁，免得離開網站。
+  const goBack = () => {
+    if (onBack) {
+      onBack();
+      return;
+    }
+    const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0;
+    if (idx > 0) navigate(-1);
+    else navigate('/');
+  };
 
   return (
     <header className="top-nav">
@@ -46,8 +66,8 @@ export default function TopNav({ current }: TopNavProps) {
           <button
             type="button"
             className="top-nav__icon top-nav__back"
-            aria-label="返回首頁"
-            onClick={() => navigate('/')}
+            aria-label={onBack ? '返回總覽' : '返回上一頁'}
+            onClick={goBack}
           >
             <svg
               viewBox="0 0 24 24"

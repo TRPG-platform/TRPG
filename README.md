@@ -47,6 +47,20 @@ export default [{ path: '/characters', element: <CharactersPage /> }] satisfies 
 - 沒有任何頁面認領的網址，會顯示前後端連線狀態頁（`client/src/StatusPage.tsx`）。
 - 兩個功能宣告同一個網址時，開發中主控台會出現警告。
 
+### 導覽列的返回鍵
+
+全站統一規則（團隊決定）：
+
+- 在某個區塊的**子畫面**（例如編輯角色卡、劇本詳細資訊、新增表單）時，返回鍵回到**該區塊的總覽**。
+- 已經在總覽時，返回鍵回到**上一頁**；直接貼網址開的頁面沒有上一頁，就回首頁。
+- 首頁不顯示返回鍵。
+
+子畫面如果沒有自己的網址（只用 state 切換），請在子畫面時傳 `onBack` 給 `TopNav`，在總覽時不要傳：
+
+```tsx
+<TopNav onBack={tab !== 'roster' ? () => setTab('roster') : undefined} />
+```
+
 ## 建置
 
 ```bash
