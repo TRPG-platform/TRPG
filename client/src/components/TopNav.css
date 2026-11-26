@@ -71,6 +71,7 @@
 
 .top-nav__icons {
   display: flex;
+  grid-column: 3; /* 隱藏中間選項（hasNavItems={false}）時仍靠右 */
   gap: 2px;
   align-items: center;
   justify-self: end;

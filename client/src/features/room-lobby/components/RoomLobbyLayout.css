@@ -8,12 +8,6 @@
   padding-bottom: 26px;
 }
 
-/* TODO(#6)：精簡頂欄完成後移除這個佔位 */
-.room-lobby__compact-header-slot {
-  flex: none;
-  height: 48px;
-}
-
 .room-lobby__body {
   display: grid;
   grid-template-columns: 326px 202px minmax(0, 1fr) minmax(0, 292px);
