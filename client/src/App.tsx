@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getHealth, getMockPreview } from './data';
+import { JoinRoomPage } from './pages/JoinRoomPage';
+import './pages/join-room.css';
 
 type Status = 'checking' | 'ok' | 'error';
 
@@ -12,6 +14,8 @@ const MESSAGES: Record<Status, string> = {
 const mockPreview = getMockPreview();
 
 export default function App() {
+  if (window.location.pathname === '/join') return <JoinRoomPage />;
+
   const [status, setStatus] = useState<Status>('checking');
 
   useEffect(() => {
@@ -30,6 +34,9 @@ export default function App() {
   return (
     <main>
       <h1>Takoyaki</h1>
+      <nav aria-label="頁面預覽">
+        <a href="/join">加入劇本房間</a>
+      </nav>
       {mockPreview ? (
         <dl>
           <dt>劇本</dt>
