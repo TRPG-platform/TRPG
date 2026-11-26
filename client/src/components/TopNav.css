@@ -1,0 +1,184 @@
+/*
+ * 全站頂部導覽列，照 Figma TV-9（p1_TV-09.png，畫面寬 1280px）量測：
+ * 高 48px、底色與頁面相同、無下框線；返回鍵在最左、TAKOYAKI 從 x≈102 開始；
+ * 四個項目各約 118px 寬、整組置中；選取項目金字＋同寬底線；右側鈴鐺與 28px 頭像。
+ * 只用 tokens.css 的設計變數。
+ */
+
+.top-nav {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: 48px;
+  padding: 0 14px 0 6px;
+  background: var(--color-bg-page);
+  font-family: var(--font-body);
+}
+
+.top-nav__start {
+  display: flex;
+  align-items: center;
+  justify-self: start;
+  height: 100%;
+}
+
+.top-nav__back {
+  margin-right: 56px;
+}
+
+/* 首頁沒有返回鍵時，標誌仍對齊同一個位置 */
+.top-nav__start:not(:has(.top-nav__back)) {
+  padding-left: 96px;
+}
+
+.top-nav__logo {
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-decoration: none;
+  color: var(--color-text-primary);
+}
+
+.top-nav__items {
+  display: flex;
+  height: 48px;
+}
+
+.top-nav__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 118px;
+  border-bottom: 2px solid transparent;
+  font-size: 15px;
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--color-text-primary);
+}
+
+.top-nav__item:hover {
+  color: var(--color-accent-gold);
+}
+
+/* 目前頁面：金字加底線（app-shell「Current page indicator」） */
+.top-nav__item[aria-current='page'] {
+  border-bottom-color: var(--color-accent-gold);
+  color: var(--color-accent-gold);
+}
+
+.top-nav__icons {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  justify-self: end;
+}
+
+.top-nav__icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.top-nav__icon:hover {
+  background: var(--color-bg-panel);
+}
+
+.top-nav__item:focus-visible,
+.top-nav__logo:focus-visible,
+.top-nav__icon:focus-visible,
+.top-nav__menu-item:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.top-nav__avatar {
+  position: relative;
+}
+
+.top-nav__avatar-bg {
+  fill: var(--color-text-primary);
+}
+
+.top-nav__avatar-fg {
+  fill: var(--color-bg-page);
+}
+
+.top-nav__menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  display: grid;
+  min-width: 140px;
+  padding: 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  background: var(--color-bg-panel);
+}
+
+.top-nav__menu-item {
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font: inherit;
+  font-size: 15px;
+  text-align: left;
+  text-decoration: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.top-nav__menu-item:hover {
+  background: var(--color-bg-panel-raised);
+}
+
+/* 設計稿只有桌面版；窄螢幕時項目換到第二行並可左右捲動 */
+@media (max-width: 760px) {
+  .top-nav {
+    grid-template-areas:
+      'start icons'
+      'items items';
+    grid-template-columns: 1fr auto;
+    height: auto;
+  }
+
+  .top-nav__start {
+    grid-area: start;
+    height: 48px;
+  }
+
+  .top-nav__back {
+    margin-right: 12px;
+  }
+
+  .top-nav__start:not(:has(.top-nav__back)) {
+    padding-left: 8px;
+  }
+
+  .top-nav__icons {
+    grid-area: icons;
+  }
+
+  .top-nav__items {
+    grid-area: items;
+    height: 42px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .top-nav__item {
+    flex: none;
+    width: auto;
+    padding: 0 14px;
+    font-size: 14px;
+  }
+}
