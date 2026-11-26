@@ -61,6 +61,13 @@ export default [{ path: '/characters', element: <CharactersPage /> }] satisfies 
 <TopNav onBack={tab !== 'roster' ? () => setTab('roster') : undefined} />
 ```
 
+## 登入狀態（目前是假的）
+
+- 首頁 `/` 與登入頁 `/login` 以外都需要登入；未登入會被導向 `/login?redirect=<原本的頁面>`。
+- 登入狀態先用假的開關，預設是**已登入**。網址加 `?auth=out` 變成未登入、`?auth=in` 變回已登入（會記在瀏覽器，重新整理後仍有效）。
+- 程式裡用 `client/src/auth/session.ts`：`useSignedIn()` 讀狀態、`signIn()`／`signOut()` 切換、`redirectAfterLogin(location.search)` 取得登入後要回去的頁面。
+- 之後 account-auth 接上真的登入 API，只改 `session.ts` 裡面，其他頁面不用改。
+
 ## 建置
 
 ```bash

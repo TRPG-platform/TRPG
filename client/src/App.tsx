@@ -1,5 +1,6 @@
 import { createBrowserRouter, type RouteObject } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
+import RequireAuth from './auth/RequireAuth';
 import StatusPage from './StatusPage';
 
 // 全站路由（app-shell，票 #5）。
@@ -36,7 +37,13 @@ if (import.meta.env.DEV) {
   }
 }
 
-const router = createBrowserRouter([...featureRoutes, { path: '*', element: <StatusPage /> }]);
+// 所有頁面都包在路由守衛裡（票 #10）：首頁與 /login 以外，未登入會被導向登入頁。
+const router = createBrowserRouter([
+  {
+    element: <RequireAuth />,
+    children: [...featureRoutes, { path: '*', element: <StatusPage /> }],
+  },
+]);
 
 export default function App() {
   return <RouterProvider router={router} />;

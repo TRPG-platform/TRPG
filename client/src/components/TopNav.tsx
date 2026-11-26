@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
+import { loginPath, signOut, useSignedIn } from '../auth/session';
 import './TopNav.css';
 
 // 全站頂部導覽列（project-foundation / app-shell「Top navigation bar」，票 #5）。
@@ -45,6 +46,7 @@ export default function TopNav({ current, onBack }: TopNavProps) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const section = current === undefined ? sectionFromPath(pathname) : current;
+  const signedIn = useSignedIn();
   const showBack = onBack !== undefined || pathname !== '/';
 
   // React Router 會在 history.state 記下這是站內第幾頁；idx 為 0 代表直接開這個網址
@@ -102,26 +104,46 @@ export default function TopNav({ current, onBack }: TopNavProps) {
           </Link>
         ))}
       </nav>
-      <div className="top-nav__icons">
-        <button type="button" className="top-nav__icon" aria-label="通知">
-          <svg
-            viewBox="0 0 24 24"
-            width="22"
-            height="22"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
-            <path d="M13.7 21a2 2 0 0 1-3.4 0" />
-          </svg>
-        </button>
-        <AvatarMenu />
-      </div>
+      {/* 未登入：鈴鐺與頭像換成登入按鈕（票 #10，團隊決定，規格沒有） */}
+      {signedIn ? <SignedInIcons /> : <LoginButton />}
     </header>
+  );
+}
+
+function LoginButton() {
+  const { pathname, search } = useLocation();
+  // 首頁登入後回首頁即可；其他頁面登入後回到目前這頁
+  const to = loginPath(pathname === '/' ? undefined : pathname + search);
+  return (
+    <div className="top-nav__icons">
+      <Link className="top-nav__login" to={to}>
+        登入
+      </Link>
+    </div>
+  );
+}
+
+function SignedInIcons() {
+  return (
+    <div className="top-nav__icons">
+      <button type="button" className="top-nav__icon" aria-label="通知">
+        <svg
+          viewBox="0 0 24 24"
+          width="22"
+          height="22"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.7 21a2 2 0 0 1-3.4 0" />
+        </svg>
+      </button>
+      <AvatarMenu />
+    </div>
   );
 }
 
@@ -185,8 +207,9 @@ function AvatarMenu() {
             role="menuitem"
             className="top-nav__menu-item"
             onClick={() => {
-              // TODO(account-auth)：呼叫 POST /api/auth/logout 後回首頁。
+              // TODO(account-auth)：先呼叫 POST /api/auth/logout。
               setOpen(false);
+              signOut();
               navigate('/');
             }}
           >

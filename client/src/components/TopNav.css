@@ -92,9 +92,24 @@
   background: var(--color-bg-panel);
 }
 
+/* 未登入時取代鈴鐺與頭像的登入按鈕 */
+.top-nav__login {
+  padding: 6px 18px;
+  border: 1px solid var(--color-accent-gold);
+  border-radius: var(--radius-button);
+  font-size: 15px;
+  text-decoration: none;
+  color: var(--color-accent-gold);
+}
+
+.top-nav__login:hover {
+  background: var(--color-bg-panel);
+}
+
 .top-nav__item:focus-visible,
 .top-nav__logo:focus-visible,
 .top-nav__icon:focus-visible,
+.top-nav__login:focus-visible,
 .top-nav__menu-item:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
