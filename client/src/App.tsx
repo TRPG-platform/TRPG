@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { getHealth, getMockPreview } from './data';
+import { JoinRoomPage } from './pages/JoinRoomPage';
+import { ScriptLibraryPage } from './pages/ScriptLibraryPage';
+import './pages/layout.css';
 
 type Status = 'checking' | 'ok' | 'error';
 
@@ -12,6 +15,12 @@ const MESSAGES: Record<Status, string> = {
 const mockPreview = getMockPreview();
 
 export default function App() {
+  if (window.location.pathname === '/join') return <JoinRoomPage />;
+  if (window.location.pathname === '/scripts') return <ScriptLibraryPage />;
+  return <StarterPage />;
+}
+
+function StarterPage() {
   const [status, setStatus] = useState<Status>('checking');
 
   useEffect(() => {
@@ -30,6 +39,9 @@ export default function App() {
   return (
     <main>
       <h1>Takoyaki</h1>
+      <nav aria-label="頁面預覽">
+        <a href="/join">加入劇本房間</a> · <a href="/scripts">劇本庫管理</a>
+      </nav>
       {mockPreview ? (
         <dl>
           <dt>劇本</dt>
@@ -39,7 +51,9 @@ export default function App() {
             {mockPreview.script.sceneCount} 場景）
           </dd>
           <dt>角色</dt>
-          <dd>{mockPreview.character.name}（{mockPreview.character.occupation}）</dd>
+          <dd>
+            {mockPreview.character.name}（{mockPreview.character.occupation}）
+          </dd>
           <dt>房號</dt>
           <dd>{mockPreview.room.roomCode}</dd>
         </dl>
