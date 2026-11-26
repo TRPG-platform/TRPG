@@ -136,6 +136,15 @@ export default function CharactersPage() {
     return () => window.clearTimeout(timer);
   }, [draft, persist]);
 
+  // 離開頁面（導覽列、返回鍵）時，還沒等到自動存檔的修改要先存掉，否則會遺失。
+  useEffect(() => () => void persist(), [persist]);
+
+  // 在編輯分頁時，導覽列返回鍵回到總覽（README「導覽列的返回鍵」）。
+  const backToRoster = () => {
+    void persist();
+    setTab('roster');
+  };
+
   const open = (character: Character) => {
     editVersion.current = 0;
     savedVersion.current = 0;
@@ -222,7 +231,7 @@ export default function CharactersPage() {
 
   return (
     <div className="characters-layout">
-      <TopNav current="characters" />
+      <TopNav current="characters" onBack={tab !== 'roster' && draft ? backToRoster : undefined} />
       <main className="characters">
         <header className="characters__top">
           <h1 className="characters__title">
@@ -284,10 +293,7 @@ export default function CharactersPage() {
                     aria-selected={tab === id}
                     aria-controls={`characters-panel-${id}`}
                     disabled={id !== 'roster' && !draft}
-                    onClick={() => {
-                      if (id === 'roster') void persist();
-                      setTab(id);
-                    }}
+                    onClick={() => (id === 'roster' ? backToRoster() : setTab(id))}
                   >
                     {label}
                   </button>
