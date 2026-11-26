@@ -1,0 +1,20 @@
+.room-lobby-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.room-lobby-header__title {
+  margin: 0;
+  color: var(--color-accent-gold);
+  font-size: 32px;
+  line-height: 1.25;
+}
+
+.room-lobby-header__subtitle {
+  margin: 4px 0 0;
+  color: var(--color-text-secondary);
+  font-size: 15px;
+}
