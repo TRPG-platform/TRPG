@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { getMockPreview } from '../data';
-import { LayoutHeader } from './LayoutHeader';
+import TopNav from '../components/TopNav';
 
 export function JoinRoomPage() {
   const [code, setCode] = useState('');
@@ -25,7 +25,7 @@ export function JoinRoomPage() {
 
   return (
     <div className="figma-layout">
-      <LayoutHeader />
+      <TopNav />
       <main className="join-layout">
         <h1>加入劇本房間</h1>
         <p>輸入房號，現在就加入 GM / KP 開設的跑團房間。</p>

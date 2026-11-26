@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 import { getHealth, getMockPreview } from './data';
 import { JoinRoomPage } from './pages/JoinRoomPage';
 import './pages/join-room.css';
@@ -14,7 +15,8 @@ const MESSAGES: Record<Status, string> = {
 const mockPreview = getMockPreview();
 
 export default function App() {
-  if (window.location.pathname === '/join') return <JoinRoomPage />;
+  const { pathname } = useLocation();
+  if (pathname === '/join') return <JoinRoomPage />;
 
   return <StarterPage />;
 }
