@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { useNavigate } from 'react-router';
 
 type Field = 'account' | 'password';
 type Errors = Partial<Record<Field, string>>;
@@ -12,6 +13,7 @@ const ERROR_MESSAGES: Record<Field, string> = {
 export default function LoginForm() {
   const [account, setAccount] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
   const [errors, setErrors] = useState<Errors>({});
   const [isSocialNoticeShown, setIsSocialNoticeShown] = useState(false);
 
@@ -27,7 +29,7 @@ export default function LoginForm() {
 
     // TODO(#10)：把假登入開關切成「已登入」，再導回原本被擋下來的頁面。
     // TODO(後端登入票)：改成呼叫 api/ 資料存取層的登入。
-    window.location.assign('/');
+    navigate('/');
   }
 
   return (

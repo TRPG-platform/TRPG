@@ -1,17 +1,21 @@
+import { useLocation, useNavigate } from 'react-router';
 import LoginForm from './LoginForm';
 import './LoginPage.css';
 
-// TODO(#5)：裝好 React Router 後改用 navigate(-1)
-function closeLoginPage() {
-  if (window.history.length > 1) {
-    window.history.back();
-  } else {
-    window.location.assign('/');
-  }
-}
-
 /** 登入頁（Figma TV-4）。這頁不放導覽列。 */
 export default function LoginPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // 關閉：站內有上一頁就返回；直接打開網址進來（沒有上一頁）就回首頁。
+  function closeLoginPage() {
+    if (location.key === 'default') {
+      navigate('/');
+    } else {
+      navigate(-1);
+    }
+  }
+
   return (
     <main className="login-page">
       <button
