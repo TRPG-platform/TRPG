@@ -1,0 +1,279 @@
+.figma-layout button,
+.figma-layout input,
+.figma-layout select {
+  color: inherit;
+  font: inherit;
+}
+
+.figma-layout button,
+.figma-layout select {
+  cursor: pointer;
+}
+
+.figma-layout button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.layout-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: 50px;
+  padding-inline: 16px;
+  background: var(--color-bg-page);
+}
+
+.layout-header a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.layout-brand {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 5vw, 64px);
+  font: 700 23px var(--font-heading);
+}
+
+.layout-header nav {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.layout-header nav > * {
+  padding: 14px clamp(10px, 2.2vw, 28px);
+  white-space: nowrap;
+}
+
+.layout-header [aria-current='page'] {
+  color: var(--color-accent-gold);
+  box-shadow: inset 0 -2px var(--color-accent-gold);
+}
+
+.layout-account {
+  justify-self: end;
+}
+
+.script-create button {
+  border: 0;
+  border-radius: var(--radius-button);
+  background: var(--color-primary);
+}
+
+.script-layout {
+  width: min(100% - 40px, 1168px);
+  margin: 24px auto 0;
+  padding-bottom: 48px;
+}
+
+.script-top,
+.script-tools,
+.script-filters,
+.script-create,
+.script-card-heading,
+.script-pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.script-top {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.script-top h1 {
+  margin: 0;
+  color: var(--color-accent-gold);
+  font-size: 32px;
+}
+
+.script-top p {
+  margin: 2px 0 0;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.script-tools input,
+.script-filters button,
+.script-filters select,
+.script-tools button {
+  min-height: 40px;
+  padding: 0 16px;
+  background: var(--color-bg-page);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-text-secondary);
+}
+
+.script-tools input {
+  width: min(328px, 58vw);
+  min-height: 48px;
+}
+
+.script-tools button {
+  padding-inline: 10px;
+  color: var(--color-accent-gold);
+}
+
+.script-filters {
+  flex-wrap: wrap;
+  margin-block: 32px 36px;
+  font-size: 14px;
+}
+
+.script-filters button[aria-pressed='true'],
+.script-tools button[aria-pressed='true'],
+.script-pagination button[aria-current='page'] {
+  background: var(--color-primary);
+  color: var(--color-text-primary);
+}
+
+.script-create {
+  justify-content: flex-end;
+  margin-bottom: 18px;
+}
+
+.script-create button {
+  width: min(100%, 240px);
+  min-height: 55px;
+  font-size: 18px;
+}
+
+.script-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  gap: 16px;
+}
+
+.script-card {
+  min-width: 0;
+  overflow: hidden;
+  padding: 4px;
+  background: var(--color-bg-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.script-card[data-selected='true'] {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: -2px;
+}
+
+.script-cover {
+  position: relative;
+}
+
+.script-cover img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-button);
+}
+
+.script-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  min-width: 80px;
+  padding: 5px 12px;
+  text-align: center;
+  background: var(--color-bg-panel-raised);
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.script-badge.in-progress {
+  background: var(--color-primary);
+}
+
+.script-badge.completed {
+  background: color-mix(in srgb, var(--color-success) 38%, var(--color-bg-panel));
+}
+
+.script-card-body {
+  padding: 4px 8px 6px;
+}
+
+.script-card-heading {
+  justify-content: space-between;
+  color: var(--color-accent-gold);
+}
+
+.script-card-heading h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.script-card-heading button,
+.script-pagination button {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  text-align: start;
+}
+
+.script-card-heading > button {
+  font-size: 24px;
+}
+
+.script-card-body p {
+  margin: 3px 0 5px;
+  font-size: 13px;
+}
+
+.script-card-body ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.script-card-body li {
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.script-list {
+  grid-template-columns: 1fr;
+}
+
+.script-list .script-card {
+  display: grid;
+  grid-template-columns: minmax(100px, 160px) 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.script-pagination {
+  justify-content: center;
+  margin-top: 56px;
+}
+
+.script-pagination button {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-card);
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .layout-header {
+    grid-template-columns: 1fr auto;
+  }
+
+  .layout-header nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    overflow: auto;
+  }
+}
