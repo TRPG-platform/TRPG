@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 import { getHealth, getMockPreview } from './data';
 import { ScriptLibraryPage } from './pages/ScriptLibraryPage';
 import './pages/layout.css';
@@ -14,7 +15,8 @@ const MESSAGES: Record<Status, string> = {
 const mockPreview = getMockPreview();
 
 export default function App() {
-  if (window.location.pathname === '/scripts') return <ScriptLibraryPage />;
+  const { pathname } = useLocation();
+  if (pathname === '/scripts') return <ScriptLibraryPage />;
 
   return <StarterPage />;
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Script } from '@takoyaki/shared';
-import { LayoutHeader } from './LayoutHeader';
+import TopNav from '../components/TopNav';
 import { scriptSamples } from './scriptSamples';
 
 const labels: Record<Script['status'], string> = {
@@ -37,7 +37,7 @@ export function ScriptLibraryPage() {
 
   return (
     <div className="figma-layout">
-      <LayoutHeader library />
+      <TopNav current="scripts" />
       <main className="script-layout">
         <div className="script-top">
           <div>
