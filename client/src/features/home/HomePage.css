@@ -11,3 +11,9 @@
   flex: 1;
   flex-direction: column;
 }
+
+/* 首頁（TV-1）的導覽列不顯示返回鍵（同 TV-2）。
+   TODO(#10)：首頁掛到 / 之後導覽列會自動隱藏返回鍵，這段可以刪掉。 */
+.home-page .top-nav__back {
+  display: none;
+}
