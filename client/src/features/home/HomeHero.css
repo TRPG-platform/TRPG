@@ -4,8 +4,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  /* TODO(#5)：導覽列做好後改成「畫面高度減掉導覽列高度」 */
-  min-height: 100vh;
+  flex: 1; /* 填滿導覽列以外的畫面高度（見 HomePage.css） */
   overflow: hidden;
   background: var(--color-bg-deepest);
 }

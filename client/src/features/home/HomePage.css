@@ -1,0 +1,13 @@
+/* 首頁版面：導覽列在上，主視覺填滿剩下的畫面高度。 */
+
+.home-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.home-page__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}

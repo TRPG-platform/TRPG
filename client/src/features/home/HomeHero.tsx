@@ -1,6 +1,6 @@
+import { Link } from 'react-router';
 import './HomeHero.css';
 
-// TODO(#5)：導覽列的票裝好 React Router 後，<a> 換成 <Link>，切頁就不會整頁重新載入。
 const CREATE_ROOM_PATH = '/rooms/new';
 const SEARCH_GAMES_PATH = '/games/search';
 
@@ -23,12 +23,12 @@ export default function HomeHero() {
         </p>
         <div className="home-hero__actions">
           {/* 要登入才能建立房間：#10 的登入檢查做好後，沒登入會被帶到登入頁 */}
-          <a className="home-hero__button home-hero__button--primary" href={CREATE_ROOM_PATH}>
+          <Link className="home-hero__button home-hero__button--primary" to={CREATE_ROOM_PATH}>
             建立房間
-          </a>
-          <a className="home-hero__button home-hero__button--secondary" href={SEARCH_GAMES_PATH}>
+          </Link>
+          <Link className="home-hero__button home-hero__button--secondary" to={SEARCH_GAMES_PATH}>
             搜尋團務
-          </a>
+          </Link>
         </div>
       </div>
     </section>

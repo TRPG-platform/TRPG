@@ -1,6 +1,15 @@
+import TopNav from '../../components/TopNav';
 import HomeHero from './HomeHero';
+import './HomePage.css';
 
-/** 首頁。導覽列（#5）做好後放在 HomeHero 上方。 */
+/** 首頁（#16，Figma TV-1）：導覽列＋主視覺區。 */
 export default function HomePage() {
-  return <HomeHero />;
+  return (
+    <div className="home-page">
+      <TopNav current="home" />
+      <main className="home-page__main">
+        <HomeHero />
+      </main>
+    </div>
+  );
 }
