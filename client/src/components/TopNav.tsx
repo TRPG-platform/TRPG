@@ -30,9 +30,13 @@ function sectionFromPath(pathname: string): NavSection | null {
 interface TopNavProps {
   /** 目前所在區塊；不傳時依網址判斷。 */
   current?: NavSection | null;
+  /** 是否顯示中間的頁面切換選項；房間大廳等房間內頁面傳 false 隱藏。預設顯示。 */
+  hasNavItems?: boolean;
+  /** 標誌是否連回首頁；房間大廳等房間內頁面傳 false，標誌只顯示不能點。預設可以點。 */
+  hasLogoLink?: boolean;
 }
 
-export default function TopNav({ current }: TopNavProps) {
+export default function TopNav({ current, hasNavItems = true, hasLogoLink = true }: TopNavProps) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const section = current === undefined ? sectionFromPath(pathname) : current;
@@ -66,22 +70,28 @@ export default function TopNav({ current }: TopNavProps) {
             </svg>
           </button>
         )}
-        <Link className="top-nav__logo" to="/">
-          TAKOYAKI
-        </Link>
-      </div>
-      <nav className="top-nav__items" aria-label="網站導覽">
-        {NAV_ITEMS.map((item) => (
-          <Link
-            key={item.id}
-            className="top-nav__item"
-            to={item.href}
-            aria-current={item.id === section ? 'page' : undefined}
-          >
-            {item.label}
+        {hasLogoLink ? (
+          <Link className="top-nav__logo" to="/">
+            TAKOYAKI
           </Link>
-        ))}
-      </nav>
+        ) : (
+          <span className="top-nav__logo">TAKOYAKI</span>
+        )}
+      </div>
+      {hasNavItems && (
+        <nav className="top-nav__items" aria-label="網站導覽">
+          {NAV_ITEMS.map((item) => (
+            <Link
+              key={item.id}
+              className="top-nav__item"
+              to={item.href}
+              aria-current={item.id === section ? 'page' : undefined}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      )}
       <div className="top-nav__icons">
         <button type="button" className="top-nav__icon" aria-label="通知">
           <svg

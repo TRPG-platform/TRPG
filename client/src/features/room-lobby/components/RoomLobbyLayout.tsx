@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import TopNav from '../../../components/TopNav';
 import './RoomLobbyLayout.css';
 
 // 房間大廳的版面外框，GM（TV-6）和 PL（TV-5）共用。
@@ -29,8 +30,9 @@ export default function RoomLobbyLayout({
 }: RoomLobbyLayoutProps) {
   return (
     <div className="room-lobby">
-      {/* TODO(#6)：換成房間內精簡頂欄（離開鍵、標誌、鈴鐺、頭像），目前只佔位置。 */}
-      <div className="room-lobby__compact-header-slot" aria-hidden="true" />
+      {/* 房間內隱藏中間的頁面切換選項，標誌只顯示不能點；保留返回鍵、通知、頭像選單。
+          TODO(#6)：精簡頂欄的「離開前確認」完成後，改用 #6 的做法。 */}
+      <TopNav hasNavItems={false} hasLogoLink={false} />
       <main className="room-lobby__body">
         <div className="room-lobby__script">{scriptInfo}</div>
         <div className="room-lobby__header">{header}</div>
