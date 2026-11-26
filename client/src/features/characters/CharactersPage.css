@@ -466,6 +466,11 @@
   color: var(--paper-accent);
 }
 
+/* 右頁補位用的空格：佔位置但看不見 */
+.polaroid--empty {
+  visibility: hidden;
+}
+
 .polaroid--add {
   border: 2px dashed var(--paper-line);
   background: transparent;
