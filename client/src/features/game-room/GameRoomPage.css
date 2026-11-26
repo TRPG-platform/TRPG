@@ -17,32 +17,27 @@
 }
 
 .game-room__header {
+  position: relative;
+  z-index: 5;
   display: flex;
   min-height: 3rem;
   align-items: center;
   gap: 1rem;
   border-bottom: 1px solid var(--color-border);
-  padding: 0.4rem clamp(0.75rem, 2vw, 2rem);
+  padding: 0 14px 0 6px;
   background: var(--room-surface);
 }
 
-.game-room__header h1 {
-  margin-inline-start: auto;
-  font-size: 1.5rem;
+.game-room__brand {
+  margin-inline-end: auto;
 }
 
-.game-room__header nav {
-  display: flex;
-  gap: 0.25rem;
+.game-room__brand .top-nav__back {
+  text-decoration: none;
 }
 
-.game-room__header a {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-}
-
-.game-room__header [aria-current] {
-  color: var(--color-accent-gold);
+.game-room__brand .top-nav__logo {
+  font-family: var(--font-body);
 }
 
 .game-room__layout {
@@ -185,7 +180,7 @@
   color: var(--color-text-primary);
 }
 
-.game-room button {
+.game-room button:not(:where(.top-nav__icons *)) {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-button);
   padding: 0.35rem 0.55rem;

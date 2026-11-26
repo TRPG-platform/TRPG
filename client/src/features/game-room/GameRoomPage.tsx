@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import HeaderAccountActions from '../../components/HeaderAccountActions';
 import type { GameRoomPreview } from '../../data';
 import { CharacterPanel, ClueMemo, PlayerList, RoomSettings } from './GameRoomPanels';
 import RoomChat from './RoomChat';
@@ -17,19 +18,14 @@ export default function GameRoomPage({ role, preview }: GameRoomPageProps) {
   return (
     <main className="game-room">
       <header className="game-room__header">
-        <a href="/" aria-label="返回首頁">
-          ←
-        </a>
-        <h1>TAKOYAKI</h1>
+        <div className="top-nav__start game-room__brand">
+          <a className="top-nav__icon top-nav__back" href="/" aria-label="返回首頁">
+            ←
+          </a>
+          <h1 className="top-nav__logo">TAKOYAKI</h1>
+        </div>
         <span>房號 {preview.room.roomCode}</span>
-        <nav aria-label="切換預覽角色">
-          <a href="?game-room=gm" aria-current={isGm ? 'page' : undefined}>
-            GM
-          </a>
-          <a href="?game-room=pl" aria-current={isGm ? undefined : 'page'}>
-            PL
-          </a>
-        </nav>
+        <HeaderAccountActions />
       </header>
 
       <div className="game-room__layout">
