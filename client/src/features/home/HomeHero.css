@@ -10,16 +10,13 @@
   background: var(--color-bg-deepest);
 }
 
-/* 右側背景：城堡圖還沒確定，先用漸層暫代；左邊維持深色，往右慢慢變亮 */
+/* 右側背景：城堡圖（Figma 匯出），上面蓋一層漸層，左邊維持深色讓標語看得清楚 */
 .home-hero__backdrop {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    var(--color-bg-deepest) 35%,
-    var(--color-bg-panel) 65%,
-    var(--color-bg-panel-raised) 100%
-  );
+  background:
+    linear-gradient(90deg, var(--color-bg-deepest) 35%, transparent 65%),
+    url('../../assets/home-hero-castle.jpg') right center / cover no-repeat;
 }
 
 .home-hero__content {

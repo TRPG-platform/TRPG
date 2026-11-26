@@ -8,7 +8,6 @@ const SEARCH_GAMES_PATH = '/games/search';
 export default function HomeHero() {
   return (
     <section className="home-hero" aria-labelledby="home-hero-title">
-      {/* TODO：城堡背景圖來源確認後補上，目前先用漸層暫代 */}
       <div className="home-hero__backdrop" aria-hidden="true" />
 
       <div className="home-hero__content">
