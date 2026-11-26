@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import HeaderAccountActions from '../../components/HeaderAccountActions';
 import type { GameRoomPreview } from '../../data';
 import { CharacterPanel, ClueMemo, PlayerList, RoomSettings } from './GameRoomPanels';
-import RoomChat from './RoomChat';
+import DiceDemo from './DiceDemo';
+import RoomChat, { type PrivateThread } from './RoomChat';
 import libraryPreview from './library-preview.jpg';
 import './GameRoomPage.css';
 
@@ -13,7 +14,44 @@ interface GameRoomPageProps {
 
 export default function GameRoomPage({ role, preview }: GameRoomPageProps) {
   const isGm = role === 'gm';
+  const [activeChat, setActiveChat] = useState('main');
+  const [privateThreads, setPrivateThreads] = useState<PrivateThread[]>([]);
+  const gmName = '投沒透';
+  const settings = preview.room.settings;
   const [assetCategory, setAssetCategory] = useState<'背景' | '立繪' | '道具'>('背景');
+
+  const [abilityPlayer, setAbilityPlayer] = useState<GameRoomPreview['players'][number] | null>(
+    null,
+  );
+  const abilityCloseTimer = useRef<number | undefined>(undefined);
+
+  useEffect(() => () => window.clearTimeout(abilityCloseTimer.current), []);
+
+  function closeAbilityPreview() {
+    window.clearTimeout(abilityCloseTimer.current);
+    setAbilityPlayer(null);
+  }
+
+  function scheduleAbilityClose() {
+    window.clearTimeout(abilityCloseTimer.current);
+    abilityCloseTimer.current = window.setTimeout(closeAbilityPreview, 250);
+  }
+
+  function showAbilityPreview(player: GameRoomPreview['players'][number]) {
+    window.clearTimeout(abilityCloseTimer.current);
+    setAbilityPlayer(player);
+  }
+  function openPrivateThread(recipients: string[]) {
+    const members = [...recipients].sort();
+    const id = JSON.stringify(members);
+    setPrivateThreads((current) =>
+      current.some((thread) => thread.id === id)
+        ? current
+        : [...current, { id, recipients: members }],
+    );
+    setActiveChat(id);
+    closeAbilityPreview();
+  }
 
   return (
     <main className="game-room">
@@ -32,7 +70,17 @@ export default function GameRoomPage({ role, preview }: GameRoomPageProps) {
         <aside className="game-room__sidebar" aria-label={isGm ? 'GM 控制區' : '我的角色'}>
           {isGm ? (
             <>
-              <PlayerList players={preview.players} />
+              <PlayerList
+                onPreview={showAbilityPreview}
+                onPreviewLeave={scheduleAbilityClose}
+                activePlayer={abilityPlayer?.name}
+                players={preview.players}
+                onWhisper={
+                  settings.allowGmToPlayerWhispers
+                    ? (recipient) => openPrivateThread([recipient])
+                    : undefined
+                }
+              />
               <RoomSettings room={preview.room} />
             </>
           ) : (
@@ -41,29 +89,50 @@ export default function GameRoomPage({ role, preview }: GameRoomPageProps) {
         </aside>
 
         <div className="game-room__center">
-          <section className="game-room__panel game-room__scene" aria-labelledby="scene-title">
-            <h2 id="scene-title">場景：{preview.scene}</h2>
-            <img src={libraryPreview} alt={preview.scene} />
-          </section>
-          <RoomChat role={isGm ? 'GM' : 'PL'} name={isGm ? '投沒透' : preview.character.name} />
+          <div className="game-room__scene-anchor">
+            <section className="game-room__panel game-room__scene" aria-labelledby="scene-title">
+              <h2 id="scene-title">場景：{preview.scene}</h2>
+              <img src={libraryPreview} alt={preview.scene} />
+            </section>
+            {abilityPlayer && (
+              <aside
+                className="game-room__player-flyout"
+                aria-label={`${abilityPlayer.name} 的能力值`}
+                onPointerEnter={() => window.clearTimeout(abilityCloseTimer.current)}
+                onPointerLeave={scheduleAbilityClose}
+              >
+                <div className="game-room__player-flyout-bar">
+                  <strong>能力值</strong>
+                  <button
+                    type="button"
+                    aria-label={`關閉 ${abilityPlayer.name} 的能力值`}
+                    onClick={closeAbilityPreview}
+                  >
+                    ×
+                  </button>
+                </div>
+                <CharacterPanel character={abilityPlayer} stats={abilityPlayer} />
+              </aside>
+            )}
+          </div>
+          <RoomChat
+            role={isGm ? 'GM' : 'PL'}
+            name={isGm ? gmName : preview.character.name}
+            threads={privateThreads}
+            activeTab={activeChat}
+            onTabChange={setActiveChat}
+            onCloseThread={(id) => {
+              setPrivateThreads((current) => current.filter((thread) => thread.id !== id));
+              setActiveChat((current) => (current === id ? 'ooc' : current));
+            }}
+          />
         </div>
 
         <aside className="game-room__sidebar" aria-label="擲骰、房間資訊與備忘錄">
           <section className="game-room__panel game-room__dice" aria-labelledby="dice-title">
             <h2 id="dice-title">擲骰</h2>
             <div className="game-room__panel-body">
-              <select aria-label="選擇技能" disabled>
-                <option>選擇技能</option>
-              </select>
-              <button type="button" disabled>
-                進行判定
-              </button>
-              <h3>擲骰紀錄</h3>
-              <ul>
-                {preview.rolls.map((roll) => (
-                  <li key={roll}>{roll}</li>
-                ))}
-              </ul>
+              <DiceDemo sampleRolls={preview.rolls} />
             </div>
           </section>
           {isGm ? (
@@ -88,7 +157,15 @@ export default function GameRoomPage({ role, preview }: GameRoomPageProps) {
               </div>
             </section>
           ) : (
-            <PlayerList players={preview.players} />
+            <PlayerList
+              players={preview.players}
+              ownPlayerName={preview.character.name}
+              onWhisper={
+                settings.allowPlayerToPlayerWhispers
+                  ? (recipient) => openPrivateThread([recipient])
+                  : undefined
+              }
+            />
           )}
           <ClueMemo clues={preview.clues} />
         </aside>

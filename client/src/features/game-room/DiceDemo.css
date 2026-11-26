@@ -1,0 +1,96 @@
+.dice-demo {
+  position: fixed;
+  z-index: 20;
+  inset: 50% auto auto 50%;
+  display: grid;
+  justify-items: center;
+  gap: 0.55rem;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: dice-demo-display 2.4s both;
+}
+
+.dice-demo__shape {
+  display: grid;
+  width: clamp(7rem, 18vmin, 10rem);
+  aspect-ratio: 1;
+  place-items: center;
+  clip-path: polygon(50% 0, 95% 24%, 95% 76%, 50% 100%, 5% 76%, 5% 24%);
+  background: conic-gradient(
+    from 30deg,
+    var(--color-primary) 0 60deg,
+    var(--color-bg-panel-raised) 60deg 120deg,
+    var(--color-primary-button) 120deg 180deg,
+    var(--color-bg-panel) 180deg 240deg,
+    var(--color-primary) 240deg 300deg,
+    var(--color-primary-button) 300deg
+  );
+  animation: dice-demo-tumble 0.85s cubic-bezier(0.2, 0.65, 0.25, 1) both;
+}
+
+.dice-demo__face {
+  display: grid;
+  width: 65%;
+  aspect-ratio: 1;
+  place-items: center;
+  clip-path: polygon(50% 0, 100% 78%, 50% 100%, 0 78%);
+  background: var(--color-bg-deepest);
+  color: var(--color-accent-gold);
+  font: 700 clamp(2rem, 6vmin, 3.2rem) / 1 var(--font-body);
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.5rem;
+  animation: dice-demo-result 2.4s both;
+}
+
+.dice-demo__label {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  padding: 0.2rem 0.55rem;
+  background: var(--color-bg-deepest);
+  color: var(--color-text-primary);
+  font-weight: 700;
+}
+
+@keyframes dice-demo-display {
+  0%,
+  84% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes dice-demo-tumble {
+  0% {
+    transform: translateY(-42px) rotate(-420deg) scale(0.55);
+  }
+
+  72% {
+    transform: translateY(7px) rotate(14deg) scale(1.07);
+  }
+
+  100% {
+    transform: translateY(0) rotate(0) scale(1);
+  }
+}
+
+@keyframes dice-demo-result {
+  0%,
+  32% {
+    color: transparent;
+  }
+
+  36%,
+  100% {
+    color: var(--color-accent-gold);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dice-demo__shape,
+  .dice-demo__face {
+    animation: none;
+  }
+}

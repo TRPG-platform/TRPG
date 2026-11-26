@@ -83,16 +83,20 @@
   padding: 0.75rem;
 }
 
+.game-room__scene-anchor {
+  position: relative;
+}
+
 .game-room__scene {
   padding: 0.2rem;
 }
 
-.game-room__scene h2 {
+.game-room__scene > h2 {
   width: fit-content;
   padding-block: 0.25rem;
 }
 
-.game-room__scene img {
+.game-room__scene > img {
   display: block;
   width: 100%;
   aspect-ratio: 700 / 294;
@@ -102,13 +106,8 @@
 .game-room__chat {
   display: flex;
   min-height: 19rem;
-  flex: 1;
+  flex: none;
   flex-direction: column;
-}
-
-.game-room__chat h2 span {
-  margin-inline-start: 1rem;
-  color: var(--color-text-secondary);
 }
 
 .game-room__chat ol,
@@ -164,13 +163,13 @@
 
 .game-room__composer {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: auto;
   padding: 0.75rem;
 }
 
-.game-room__composer textarea,
-.game-room__dice select {
+.game-room__composer textarea {
   min-width: 0;
   flex: 1;
   border: 1px solid var(--color-border);
@@ -194,15 +193,9 @@
 
 .game-room__dice .game-room__panel-body {
   display: grid;
-  justify-items: start;
   gap: 0.5rem;
 }
 
-.game-room__dice select {
-  width: 100%;
-}
-
-.game-room__dice ul,
 .game-room__memo ul {
   padding-inline-start: 1.15rem;
 }
@@ -315,7 +308,7 @@
 }
 
 .game-room__composer textarea {
-  resize: vertical;
+  resize: none;
 }
 
 .game-room__composer button {
@@ -329,4 +322,192 @@
 
 .game-room__chat-message p {
   white-space: pre-wrap;
+}
+
+:root:has(.game-room),
+.game-room {
+  scrollbar-color: var(--color-border) transparent;
+  scrollbar-width: thin;
+}
+
+.game-room__chat-history,
+.game-room__roll-history,
+.game-room__chat-tabs {
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.game-room__chat-history,
+.game-room__roll-history {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.game-room__chat-history {
+  block-size: 14rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.game-room .game-room__roll-button {
+  justify-self: stretch;
+  border-color: var(--color-primary);
+  padding: 0.55rem 0.75rem;
+  background: var(--color-bg-panel-raised);
+  color: var(--color-accent-gold);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.game-room .game-room__roll-button:hover {
+  background: var(--color-bg-panel);
+}
+
+.game-room__roll-history {
+  block-size: 5.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  padding: 0.2rem 0.55rem;
+  background: var(--color-bg-panel);
+  list-style: none;
+  overflow-wrap: anywhere;
+}
+
+.game-room__roll-history li {
+  padding: 0.3rem 0.15rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.game-room__roll-history li + li {
+  border-top: 1px solid var(--color-border);
+}
+
+.game-room__chat-tabs {
+  display: flex;
+  align-items: end;
+  gap: 0.16rem;
+  overflow-x: auto;
+  padding: 0.4rem 0.45rem 0;
+  background: var(--color-bg-panel-raised);
+}
+
+.game-room__chat-tabs > button,
+.game-room__chat-thread-tab {
+  flex: 0 0 auto;
+  border-bottom-color: transparent;
+  border-radius: var(--radius-button) var(--radius-button) 0 0;
+}
+
+.game-room__chat-tabs > button {
+  padding-inline: 0.75rem;
+  white-space: nowrap;
+}
+
+.game-room__chat-tabs button[aria-pressed='true'],
+.game-room__chat-thread-tab[data-active='true'] {
+  background: var(--room-surface);
+  color: var(--color-accent-gold);
+}
+
+.game-room__chat-thread-tab {
+  display: flex;
+  max-inline-size: 14rem;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-bottom-color: transparent;
+  background: var(--color-bg-panel);
+}
+
+.game-room__chat-tabs .game-room__chat-thread-tab button {
+  overflow: hidden;
+  border: 0;
+  background: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.game-room__chat-tabs .game-room__chat-close {
+  flex: none;
+  padding-inline: 0.45rem;
+}
+
+.game-room__chat-tabs .game-room__chat-close:hover {
+  background: var(--color-bg-panel-raised);
+}
+
+.game-room__chat-members {
+  flex: 1 0 100%;
+}
+
+.game-room__chat-name[data-role='PL'] {
+  color: var(--color-text-primary);
+}
+
+.game-room__chat-name[data-role='GM'] {
+  color: var(--color-accent-orange);
+}
+
+.game-room__players .game-room__player {
+  display: block;
+  min-width: 0;
+}
+
+.game-room__player-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.game-room__player-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.game-room__player-options {
+  white-space: nowrap;
+  flex: none;
+}
+
+.game-room .game-room__player-preview {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  gap: 0.35rem;
+  border-color: transparent;
+  padding: 0;
+  background: none;
+  text-align: start;
+  cursor: pointer;
+}
+
+.game-room .game-room__player-preview:hover,
+.game-room .game-room__player-preview:focus-visible {
+  background: var(--color-bg-panel);
+}
+
+.game-room__player-flyout {
+  position: absolute;
+  z-index: 4;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: min(18rem, 72%);
+  max-block-size: min(65dvh, 32rem);
+  display: grid;
+  align-content: start;
+  gap: 0.45rem;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  padding: 0.65rem;
+  background: color-mix(in srgb, var(--color-bg-deepest) 87%, transparent);
+  backdrop-filter: blur(10px);
+  scrollbar-width: thin;
+}
+
+.game-room__player-flyout-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
 }

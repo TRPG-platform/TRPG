@@ -1,17 +1,76 @@
 import type { GameRoomPreview } from '../../data';
 
-export function PlayerList({ players }: { players: GameRoomPreview['players'] }) {
+type Player = GameRoomPreview['players'][number];
+
+type PlayerListProps = {
+  players: Player[];
+  onWhisper?: (name: string) => void;
+  onPreview?: (player: Player) => void;
+  onPreviewLeave?: () => void;
+  activePlayer?: string;
+  ownPlayerName?: string;
+};
+
+export function PlayerList({
+  players,
+  onWhisper,
+  onPreview,
+  onPreviewLeave,
+  activePlayer,
+  ownPlayerName,
+}: PlayerListProps) {
   return (
     <section className="game-room__panel">
       <h2>玩家列表</h2>
       <ul className="game-room__players">
         {players.map((player) => (
-          <li key={player.name}>
-            <span className="game-room__avatar" aria-hidden="true" />
-            <span className="game-room__role">PL</span>
-            <div>
-              <strong>{player.name}</strong>
-              <small>{player.occupation}</small>
+          <li key={player.name} className="game-room__player">
+            <div className="game-room__player-row">
+              {onPreview ? (
+                <>
+                  <button
+                    type="button"
+                    className="game-room__player-preview"
+                    aria-label={`查看 ${player.name} 的能力值`}
+                    aria-expanded={activePlayer === player.name}
+                    onPointerEnter={(event) => {
+                      if (event.pointerType === 'mouse') onPreview(player);
+                    }}
+                    onPointerLeave={onPreviewLeave}
+                    onClick={() => onPreview(player)}
+                  >
+                    <span className="game-room__avatar" aria-hidden="true" />
+                    <span className="game-room__role">PL</span>
+                    <span className="game-room__player-info">
+                      <strong>{player.name}</strong>
+                      <small>{player.occupation}</small>
+                      <small>
+                        HP {player.hp} · SAN {player.san}
+                      </small>
+                    </span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <span className="game-room__avatar" aria-hidden="true" />
+                  <span className="game-room__role">PL</span>
+                  <div className="game-room__player-info">
+                    <strong>{player.name}</strong>
+                    <small>{player.occupation}</small>
+                  </div>
+                </>
+              )}
+              {(onPreview || onWhisper) && player.name !== ownPlayerName && (
+                <button
+                  type="button"
+                  className="game-room__player-options"
+                  aria-label={`私訊 ${player.name}`}
+                  disabled={!onWhisper}
+                  onClick={() => onWhisper?.(player.name)}
+                >
+                  私訊
+                </button>
+              )}
             </div>
           </li>
         ))}
@@ -19,7 +78,6 @@ export function PlayerList({ players }: { players: GameRoomPreview['players'] })
     </section>
   );
 }
-
 export function RoomSettings({ room }: { room: GameRoomPreview['room'] }) {
   const switches = [
     ['特效', room.settings.enableEffects],
@@ -46,7 +104,17 @@ export function RoomSettings({ room }: { room: GameRoomPreview['room'] }) {
   );
 }
 
-export function CharacterPanel({ character, stats }: Pick<GameRoomPreview, 'character' | 'stats'>) {
+interface CharacterPanelProps {
+  character: Pick<GameRoomPreview['character'], 'name' | 'occupation'>;
+  stats: {
+    hp: string;
+    san: string;
+    attributes: readonly (readonly [string, number])[];
+    skills: readonly (readonly [string, number])[];
+  };
+}
+
+export function CharacterPanel({ character, stats }: CharacterPanelProps) {
   return (
     <>
       <section className="game-room__panel">
