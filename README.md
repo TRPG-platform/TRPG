@@ -8,7 +8,7 @@
 
 ## 本機啟動
 
-需要 Node.js 20 以上。
+需要 Node.js 22.22 以上（React Router 8 的要求）。用 `node -v` 確認版本。
 
 ```bash
 npm install
@@ -27,6 +27,25 @@ npm run dev
 
 前端透過 `client/src/data/` 讀資料。後端目前提供 `/api/health`；
 劇本、角色及房間 API 由各功能票接上。
+
+## 新增頁面（路由）
+
+前端用 React Router，路由會**自動收集**，新增頁面不用改 `client/src/App.tsx`：
+
+1. 在自己的功能資料夾建立 `routes.tsx`，例如 `client/src/features/characters/routes.tsx`
+2. 用 `export default` 匯出路由陣列：
+
+```tsx
+import type { RouteObject } from 'react-router';
+import CharactersPage from './CharactersPage';
+
+export default [{ path: '/characters', element: <CharactersPage /> }] satisfies RouteObject[];
+```
+
+- 頁面上方要有導覽列的話，在頁面元件裡放 `<TopNav />`（`client/src/components/TopNav.tsx`）。
+- 頁面之間的連結用 `<Link to="/...">`，程式裡跳頁用 `useNavigate()`（都從 `react-router` 匯入），不要用 `<a href>`，否則會整頁重新載入。
+- 沒有任何頁面認領的網址，會顯示前後端連線狀態頁（`client/src/StatusPage.tsx`）。
+- 兩個功能宣告同一個網址時，開發中主控台會出現警告。
 
 ## 建置
 

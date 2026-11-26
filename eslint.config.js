@@ -41,6 +41,12 @@ export default defineConfig(
     },
   },
 
+  // 各功能的路由檔匯出的是路由陣列，不是元件，不適用 react-refresh 的規則（見 client/src/App.tsx）
+  {
+    files: ['client/src/features/*/routes.tsx'],
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
+
   // 後端、共用型別與設定檔：Node.js 環境
   {
     files: ['server/**/*.ts', 'shared/**/*.ts', 'client/vite.config.ts', '*.js'],
