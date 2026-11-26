@@ -126,6 +126,9 @@
 }
 
 .login-form__social-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
   padding: 0.375rem 0.75rem;
   border: 0;
   border-radius: var(--radius-button);
@@ -134,6 +137,12 @@
   font: inherit;
   font-size: 0.8125rem;
   cursor: pointer;
+}
+
+.login-form__social-logo {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
 }
 
 .login-form__notice {

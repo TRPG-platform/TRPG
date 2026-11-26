@@ -1,5 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
+import googleLogo from './google-logo.svg';
+import discordLogo from './discord-logo.svg';
 
 type Field = 'account' | 'password';
 type Errors = Partial<Record<Field, string>>;
@@ -85,6 +87,7 @@ export default function LoginForm() {
           className="login-form__social-button"
           onClick={() => setIsSocialNoticeShown(true)}
         >
+          <img className="login-form__social-logo" src={googleLogo} alt="" />
           使用 Google 帳號
         </button>
         <button
@@ -92,6 +95,7 @@ export default function LoginForm() {
           className="login-form__social-button"
           onClick={() => setIsSocialNoticeShown(true)}
         >
+          <img className="login-form__social-logo" src={discordLogo} alt="" />
           使用 Discord 帳號
         </button>
       </div>
