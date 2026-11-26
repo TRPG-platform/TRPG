@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { GameRoomPreview } from '../../data';
 import { CharacterPanel, ClueMemo, PlayerList, RoomSettings } from './GameRoomPanels';
+import RoomChat from './RoomChat';
 import libraryPreview from './library-preview.jpg';
 import './GameRoomPage.css';
 
@@ -48,33 +49,7 @@ export default function GameRoomPage({ role, preview }: GameRoomPageProps) {
             <h2 id="scene-title">場景：{preview.scene}</h2>
             <img src={libraryPreview} alt={preview.scene} />
           </section>
-          <section className="game-room__panel game-room__chat" aria-labelledby="chat-title">
-            <h2 id="chat-title">
-              主要頻道 <span>Dice / GM公告</span>
-            </h2>
-            <ol>
-              {preview.messages.map((message) => (
-                <li key={message.name}>
-                  <span className="game-room__avatar" aria-hidden="true" />
-                  <div>
-                    <strong>
-                      <span className="game-room__role" data-role={message.role}>
-                        {message.role}
-                      </span>{' '}
-                      {message.name}
-                    </strong>
-                    <p>{message.body}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-            <div className="game-room__composer">
-              <input aria-label="輸入訊息" placeholder="輸入訊息…" disabled />
-              <button type="button" disabled>
-                送出
-              </button>
-            </div>
-          </section>
+          <RoomChat role={isGm ? 'GM' : 'PL'} name={isGm ? '投沒透' : preview.character.name} />
         </div>
 
         <aside className="game-room__sidebar" aria-label="擲骰、房間資訊與備忘錄">

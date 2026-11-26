@@ -8,7 +8,7 @@
   margin: 0;
 }
 
-.game-room :is(button, input, select) {
+.game-room :is(button, input, select, textarea) {
   font: inherit;
 }
 
@@ -174,7 +174,7 @@
   padding: 0.75rem;
 }
 
-.game-room__composer input,
+.game-room__composer textarea,
 .game-room__dice select {
   min-width: 0;
   flex: 1;
@@ -317,4 +317,21 @@
     flex-wrap: wrap;
     gap: 0.4rem;
   }
+}
+
+.game-room__composer textarea {
+  resize: vertical;
+}
+
+.game-room__composer button {
+  align-self: end;
+}
+
+.game-room__chat-message {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.game-room__chat-message p {
+  white-space: pre-wrap;
 }

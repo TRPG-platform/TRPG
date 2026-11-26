@@ -37,15 +37,6 @@ export function createGameRoomPreview() {
         ['歷史', 65],
       ] as const,
     },
-    messages: [
-      {
-        role: 'GM',
-        name: '投沒透',
-        body: '你們推開了厚重的木門，灰塵在月光下緩緩漂浮。眼前是座寂靜的圖書館。',
-      },
-      { role: 'PL', name: '波太透', body: '……這裡比我想得還要大。' },
-      { role: 'PL', name: '補路貝瑞', body: '我檢查一下書架有沒有什麼可疑的痕跡。' },
-    ],
     rolls: ['1D100 ≤ 75 → 34　成功', '1D100 ≤ 60 → 88　失敗'],
     clues: ['圖書館的借閱紀錄', '破損書頁（疑似儀式）'],
   };
