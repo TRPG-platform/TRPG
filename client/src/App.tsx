@@ -16,6 +16,10 @@ const mockPreview = getMockPreview();
 export default function App() {
   if (window.location.pathname === '/scripts') return <ScriptLibraryPage />;
 
+  return <StarterPage />;
+}
+
+function StarterPage() {
   const [status, setStatus] = useState<Status>('checking');
 
   useEffect(() => {
