@@ -1,0 +1,74 @@
+/* 共用確認視窗（ConfirmDialog）。只用 tokens.css 的設計變數。 */
+
+.confirm-dialog__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: color-mix(in srgb, var(--color-bg-deepest) 70%, transparent);
+}
+
+.confirm-dialog {
+  width: min(480px, 100%);
+  padding: 20px 24px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-bg-panel);
+  font-family: var(--font-body);
+  color: var(--color-text-primary);
+}
+
+.confirm-dialog__title {
+  margin: 0 0 12px;
+  font-size: 22px;
+}
+
+.confirm-dialog__message {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.confirm-dialog__error {
+  margin: 12px 0 0;
+  font-weight: 700;
+  color: var(--color-accent-gold);
+}
+
+.confirm-dialog__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.confirm-dialog__button {
+  min-height: 40px;
+  padding: 6px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  background: var(--color-bg-panel-raised);
+  font: inherit;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.confirm-dialog__button:hover:not(:disabled) {
+  border-color: var(--color-accent-gold);
+}
+
+.confirm-dialog__button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.confirm-dialog__button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.confirm-dialog__button--primary {
+  border-color: var(--color-primary-button);
+  background: var(--color-primary-button);
+}

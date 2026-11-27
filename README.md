@@ -94,3 +94,30 @@ npm run format:check  # 只檢查排版，不改檔（適合送 PR 前跑）
 - 寫樣式時一律用變數，例如 `background: var(--color-bg-panel);`、`border-radius: var(--radius-card);`。
 - **不要寫死色碼**：`tokens.css` 以外的 TS/TSX 或 CSS 出現 `#fff` 這類色碼，`npm run lint` 會報錯。
 - 需要新的顏色時，請開 PR 修改 `tokens.css`，不要在自己的檔案另外定義。
+
+## 共用確認視窗（ConfirmDialog）
+
+刪除、確定離開、確定修改等「要使用者再按一次確認」的地方，一律用 `client/src/components/ConfirmDialog.tsx`，不要自己再做一個。
+
+```tsx
+import ConfirmDialog from '../../components/ConfirmDialog';
+
+// 用條件決定要不要顯示，再把 {deleteDialog} 放進頁面的 JSX
+const deleteDialog = confirmingDelete && (
+  <ConfirmDialog
+    title="刪除「夜行的圖書館」？"
+    confirmLabel="確定刪除"
+    onConfirm={remove}
+    onCancel={() => setConfirmingDelete(false)}
+    error={deleteError || undefined}
+  >
+    劇本的所有資料都會刪除，無法復原。
+  </ConfirmDialog>
+);
+```
+
+- 什麼時候顯示由頁面自己決定（條件渲染），元件只負責畫面與鍵盤操作。
+- 按 Esc 或點視窗外面 = 取消；打開時焦點在「取消」，避免按 Enter 誤觸確認。
+- `error`：有值時在說明下方顯示錯誤，視窗不關閉（例如刪除或存檔失敗）。
+- `busy`：處理中（例如存檔中）按鈕停用，確認按鈕改顯示 `busyLabel`（預設「處理中…」）。
+- `cancelLabel`：取消按鈕文字，預設「取消」。
