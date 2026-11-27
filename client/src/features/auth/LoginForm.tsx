@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import googleLogo from './google-logo.svg';
 import discordLogo from './discord-logo.svg';
 
@@ -69,11 +69,17 @@ export default function LoginForm() {
           aria-invalid={errors.password ? true : undefined}
           aria-describedby={errors.password ? 'login-password-error' : undefined}
         />
-        {errors.password && (
-          <p id="login-password-error" className="login-form__error">
-            ⚠ {errors.password}
-          </p>
-        )}
+        {/* 錯誤提示在左、忘記密碼在右；忘記密碼頁另開 PR 做 */}
+        <div className="login-form__field-footer">
+          {errors.password && (
+            <p id="login-password-error" className="login-form__error">
+              ⚠ {errors.password}
+            </p>
+          )}
+          <Link to="/forgot-password" className="login-form__forgot">
+            忘記密碼？
+          </Link>
+        </div>
       </div>
 
       <button type="submit" className="login-form__submit">
