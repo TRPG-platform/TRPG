@@ -25,7 +25,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
     id: 'social',
     name: '社交',
     skills: [
-      s('credit-rating', '信用等級', 0),
+      s('credit-rating', '信用評級', 0),
       s('charm', '魅惑', 15),
       s('intimidate', '恐嚇', 15),
       s('persuade', '說服', 10),
