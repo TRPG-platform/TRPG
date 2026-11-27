@@ -15,6 +15,7 @@ import RosterTab from './RosterTab';
 import SkillsTab from './SkillsTab';
 import StatsTab from './StatsTab';
 import { BackgroundTab, EquipmentTab, RecordTab } from './StoryTabs';
+import ConfirmDialog from '../../components/ConfirmDialog';
 import TopNav from '../../components/TopNav';
 import './CharactersPage.css';
 
@@ -83,6 +84,7 @@ export default function CharactersPage() {
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [deleteError, setDeleteError] = useState('');
+  const [confirmingEdit, setConfirmingEdit] = useState(false);
   // 剛按「新增調查員」建立、還沒按「確定新增」的角色 id。
   const [creatingId, setCreatingId] = useState<string | null>(null);
   // 有沒有還沒按確定的修改。
@@ -160,8 +162,18 @@ export default function CharactersPage() {
   const isCreating = isEditing && draft.id === creatingId;
   const confirmEdit = async () => {
     if (!(await persist())) return;
+    setConfirmingEdit(false);
     setCreatingId(null);
     setTab('roster');
+  };
+
+  /** 右上角確定按鈕：新增直接存；原有角色有修改時先跳「確定修改？」，沒修改就直接回總覽。 */
+  const onConfirmButton = () => {
+    if (isCreating) void confirmEdit();
+    else if (dirty) {
+      setSaveState('idle');
+      setConfirmingEdit(true);
+    } else setTab('roster');
   };
 
   // 沒按確定就要離開編輯分頁時，先跳「確定離開？」。
@@ -306,7 +318,7 @@ export default function CharactersPage() {
               <button
                 type="button"
                 className="characters__button characters__button--primary"
-                onClick={() => void confirmEdit()}
+                onClick={onConfirmButton}
               >
                 {isCreating ? '確定新增' : '確定修改'}
               </button>
@@ -363,70 +375,42 @@ export default function CharactersPage() {
         </div>
 
         {(leaving || blocker.state === 'blocked') && (
-          <div className="dialog-backdrop" onClick={cancelLeave}>
-            <div
-              className="dialog"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="leave-title"
-              onClick={(event) => event.stopPropagation()}
-            >
-              <h2 id="leave-title">確定離開？</h2>
-              <p>
-                {isCreating
-                  ? '新增的調查員還沒按「確定新增」，離開後不會保存。'
-                  : '這次的修改還沒按「確定修改」，離開後不會保存。'}
-              </p>
-              <div className="dialog__actions">
-                <button type="button" className="characters__button" onClick={cancelLeave}>
-                  取消
-                </button>
-                <button
-                  type="button"
-                  className="characters__button characters__button--primary"
-                  onClick={confirmLeave}
-                >
-                  確定離開
-                </button>
-              </div>
-            </div>
-          </div>
+          <ConfirmDialog
+            title="確定離開？"
+            confirmLabel="確定離開"
+            onConfirm={confirmLeave}
+            onCancel={cancelLeave}
+          >
+            {isCreating
+              ? '新增的調查員還沒按「確定新增」，離開後不會保存。'
+              : '這次的修改還沒按「確定修改」，離開後不會保存。'}
+          </ConfirmDialog>
+        )}
+
+        {confirmingEdit && draft && (
+          <ConfirmDialog
+            title="確定修改？"
+            confirmLabel="確定修改"
+            onConfirm={() => void confirmEdit()}
+            onCancel={() => setConfirmingEdit(false)}
+            busy={saveState === 'saving'}
+            busyLabel="存檔中…"
+            error={saveState === 'error' ? '存檔失敗，請再試一次。' : undefined}
+          >
+            「{draft.name || '未命名調查員'}」的修改會儲存，並回到角色總覽。
+          </ConfirmDialog>
         )}
 
         {confirmingDelete && draft && (
-          <div className="dialog-backdrop" onClick={() => setConfirmingDelete(false)}>
-            <div
-              className="dialog"
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="delete-title"
-              onClick={(event) => event.stopPropagation()}
-            >
-              <h2 id="delete-title">刪除「{draft.name || '未命名調查員'}」？</h2>
-              <p>這位調查員的所有資料都會刪除，無法復原。</p>
-              {deleteError && (
-                <p className="dialog__error" role="alert">
-                  ⚠ {deleteError}
-                </p>
-              )}
-              <div className="dialog__actions">
-                <button
-                  type="button"
-                  className="characters__button"
-                  onClick={() => setConfirmingDelete(false)}
-                >
-                  取消
-                </button>
-                <button
-                  type="button"
-                  className="characters__button characters__button--primary"
-                  onClick={() => void remove()}
-                >
-                  確定刪除
-                </button>
-              </div>
-            </div>
-          </div>
+          <ConfirmDialog
+            title={`刪除「${draft.name || '未命名調查員'}」？`}
+            confirmLabel="確定刪除"
+            onConfirm={() => void remove()}
+            onCancel={() => setConfirmingDelete(false)}
+            error={deleteError || undefined}
+          >
+            這位調查員的所有資料都會刪除，無法復原。
+          </ConfirmDialog>
         )}
       </main>
     </div>
