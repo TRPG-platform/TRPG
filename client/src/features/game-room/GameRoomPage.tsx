@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
 import HeaderAccountActions from '../../components/HeaderAccountActions';
+import TopNavBackButton from '../../components/TopNavBackButton';
 import type { GameRoomPreview } from '../../data';
 import { CharacterPanel, ClueMemo, PlayerList, RoomSettings } from './GameRoomPanels';
 import DiceDemo from './DiceDemo';
@@ -13,6 +15,7 @@ interface GameRoomPageProps {
 }
 
 export default function GameRoomPage({ role, preview }: GameRoomPageProps) {
+  const navigate = useNavigate();
   const isGm = role === 'gm';
   const [activeChat, setActiveChat] = useState('main');
   const [privateThreads, setPrivateThreads] = useState<PrivateThread[]>([]);
@@ -57,9 +60,7 @@ export default function GameRoomPage({ role, preview }: GameRoomPageProps) {
     <main className="game-room">
       <header className="game-room__header">
         <div className="top-nav__start game-room__brand">
-          <a className="top-nav__icon top-nav__back" href="/" aria-label="返回首頁">
-            ←
-          </a>
+          <TopNavBackButton label="返回首頁" onClick={() => navigate('/')} />
           <h1 className="top-nav__logo">TAKOYAKI</h1>
         </div>
         <span>房號 {preview.room.roomCode}</span>

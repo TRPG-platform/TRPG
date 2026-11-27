@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router';
 import HeaderAccountActions from './HeaderAccountActions';
-import './TopNav.css';
+import TopNavBackButton from './TopNavBackButton';
 
 // 全站頂部導覽列（project-foundation / app-shell「Top navigation bar」，票 #5）。
 // 房間以外的每一頁都用這一條；房間內改用精簡頂欄（票 #6，尚未實作）。
@@ -43,28 +43,7 @@ export default function TopNav({ current }: TopNavProps) {
     <header className="top-nav">
       <div className="top-nav__start">
         {showBack && (
-          <button
-            type="button"
-            className="top-nav__icon top-nav__back"
-            aria-label="返回首頁"
-            onClick={() => navigate('/')}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              width="26"
-              height="26"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3" />
-              <path d="M20 12H9" />
-              <path d="M13 7l-5 5 5 5" />
-            </svg>
-          </button>
+          <TopNavBackButton label="返回首頁" onClick={() => navigate('/')} />
         )}
         <Link className="top-nav__logo" to="/">
           TAKOYAKI
