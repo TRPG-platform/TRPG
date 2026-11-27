@@ -30,6 +30,7 @@
   /* ===== 顏色：狀態 ===== */
   /* 狀態不能只靠顏色區分，要搭配圖示或文字（開發注意事項第 11 節） */
   --color-success: #18da11; /* 成功綠 TODO: 確認和 #43866B 的分工 */
+  --color-danger: #ff6b6b; /* 錯誤紅（表單錯誤提示） TODO: 和 Figma 確認色碼 */
 
   /* ===== 字型 ===== */
   --font-body: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif; /* 內文 400 */
