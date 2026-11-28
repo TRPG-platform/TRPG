@@ -37,12 +37,19 @@
   cursor: pointer;
 }
 
-.character-library__item:hover {
+.character-library__item:hover:not(:disabled) {
   background: var(--color-bg-panel);
 }
 
 .character-library__item[aria-pressed='true'] {
   border-color: var(--color-primary);
+}
+
+/* GM 禁止既有角色時反黑 */
+.character-library__item:disabled {
+  opacity: 0.35;
+  filter: grayscale(1);
+  cursor: not-allowed;
 }
 
 .character-library__item:focus-visible {

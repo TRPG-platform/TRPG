@@ -17,6 +17,7 @@ import { getLobbyStats } from './lobbyStats';
 import CharacterLibraryList from './pl/CharacterLibraryList';
 import CharacterPickerPanel, { type CharacterTab } from './pl/CharacterPickerPanel';
 import CharacterSummaryCard from './pl/CharacterSummaryCard';
+import CreateCharacterNotebook from './pl/CreateCharacterNotebook';
 import ReadyButton from './pl/ReadyButton';
 import './PlRoomLobbyPage.css';
 
@@ -36,6 +37,9 @@ export default function PlRoomLobbyPage({ roomCode }: PlRoomLobbyPageProps) {
   const [hasLoadError, setHasLoadError] = useState(false);
   const [activeTab, setActiveTab] = useState<CharacterTab>('mine');
   const [notice, setNotice] = useState<string | null>(null);
+  const [isCreatingCharacter, setIsCreatingCharacter] = useState(false);
+  // 在這個大廳裡新建的角色；GM 禁止既有角色時只有這些可以選。
+  const [newCharacterIds, setNewCharacterIds] = useState<string[]>([]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -92,6 +96,14 @@ export default function PlRoomLobbyPage({ roomCode }: PlRoomLobbyPageProps) {
     setActiveTab('mine');
   }
 
+  function addCreatedCharacter(character: LobbyCharacter) {
+    setCharacters((current) => [character, ...current]);
+    setNewCharacterIds((current) => [...current, character.id]);
+    setIsCreatingCharacter(false);
+    chooseCharacter(character.id);
+    setNotice(`已建立「${character.name || '未命名調查員'}」，並設為本次使用的角色`);
+  }
+
   function showUnavailable(feature: string) {
     setNotice(`「${feature}」尚未開放`);
   }
@@ -128,13 +140,14 @@ export default function PlRoomLobbyPage({ roomCode }: PlRoomLobbyPageProps) {
           <CharacterPickerPanel
             activeTab={activeTab}
             onTabChange={setActiveTab}
-            onCreateCharacter={() => showUnavailable('建立新角色')}
+            onCreateCharacter={() => setIsCreatingCharacter(true)}
           >
             {activeTab === 'library' ? (
               <CharacterLibraryList
                 characters={characters}
                 selectedId={me?.characterId ?? null}
                 isExistingDisallowed={room.settings.disallowExistingCharacters}
+                newCharacterIds={newCharacterIds}
                 onSelect={chooseCharacter}
               />
             ) : myCharacter ? (
@@ -147,7 +160,7 @@ export default function PlRoomLobbyPage({ roomCode }: PlRoomLobbyPageProps) {
                   className="pl-lobby-page__empty-button"
                   onClick={() => setActiveTab('library')}
                 >
-                  到角色庫選擇
+                  開始選擇角色
                 </button>
               </div>
             )}
@@ -176,6 +189,12 @@ export default function PlRoomLobbyPage({ roomCode }: PlRoomLobbyPageProps) {
         }
       />
       <LobbyNotice message={notice} onDismiss={dismissNotice} />
+      {isCreatingCharacter && (
+        <CreateCharacterNotebook
+          onCreated={addCreatedCharacter}
+          onClose={() => setIsCreatingCharacter(false)}
+        />
+      )}
     </>
   );
 }

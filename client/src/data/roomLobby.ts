@@ -152,7 +152,8 @@ export function getRoomLobby(
       if (mockViewer === 'pl') {
         lobby.currentUserId = MOCK_PL_USER_ID;
         const me = lobby.room.members.find((member) => member.userId === MOCK_PL_USER_ID);
-        if (me) Object.assign(me, { characterId: 'character-strawberry', isReady: false });
+        // 剛進房間的 PL 還沒選角色
+        if (me) Object.assign(me, { characterId: null, isReady: false });
       }
       return lobby;
     },
