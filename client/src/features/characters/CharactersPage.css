@@ -3,7 +3,7 @@
  * 顏色只用 tokens.css 的設計變數；需要半透明時用 color-mix(… transparent) 調同一個顏色的透明度。
  * 筆記本內部以 1929×1054 的固定座標排版（對齊 notebook.webp 的紙張位置），再整體縮放。
  */
-@import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC&family=Noto+Serif+TC:wght@400;600;700&family=Special+Elite&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Serif+TC:wght@400;600;700&family=Special+Elite&display=swap');
 
 /* 整頁固定為視窗高度：導覽列、標題列照內容高度，筆記本外框拿剩下的空間 */
 .characters-layout {
@@ -370,7 +370,7 @@
 }
 
 /* ===== 調查員（總覽）：拍立得照片牆，照桌面「調查員檔案」原型 ===== */
-/* 標題下方剩下的空間給照片牆，4×3 在這塊空間裡上下置中 */
+/* 標題下方剩下的空間給照片牆，3×2 在這塊空間裡上下置中 */
 .sheet__page--roster {
   display: flex;
   flex-direction: column;
@@ -379,55 +379,67 @@
 .roster {
   display: grid;
   flex: 1;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   align-content: center;
-  gap: 36px 0;
+  gap: 44px 0;
   justify-items: center;
 }
 
+/* 整格（照片＋下方名字）是一顆按鈕；照片本身才有傾斜與紙膠帶 */
 .polaroid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  width: 180px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.polaroid:hover {
+  transform: translateY(-3px);
+}
+
+.polaroid__frame {
   position: relative;
   display: block;
-  width: 118px;
-  padding: 7px 7px 28px;
-  border: 0;
+  width: 100%;
+  padding: 9px 9px 30px;
   background: var(--paper-slot);
   box-shadow:
     0 2px 0 var(--paper-line),
     0 6px 10px -6px var(--paper-shadow);
-  color: inherit;
-  font: inherit;
   transform: rotate(var(--tilt, 0deg));
-  cursor: pointer;
-}
-
-.polaroid:hover {
-  transform: rotate(var(--tilt, 0deg)) translateY(-3px);
 }
 
 /* 紙膠帶 */
-.polaroid::before,
-.polaroid::after {
+.polaroid__frame::before,
+.polaroid__frame::after {
   content: '';
   position: absolute;
-  width: 40px;
-  height: 12px;
+  width: 52px;
+  height: 15px;
   background: color-mix(in srgb, var(--paper-accent) 60%, transparent);
 }
 
-.polaroid::before {
-  top: -5px;
-  left: -12px;
+.polaroid__frame::before {
+  top: -6px;
+  left: -15px;
   transform: rotate(-26deg);
 }
 
-.polaroid::after {
-  right: -12px;
-  bottom: -3px;
+.polaroid__frame::after {
+  right: -15px;
+  bottom: -4px;
   transform: rotate(-22deg);
 }
 
-.polaroid--selected {
+.polaroid--selected .polaroid__frame {
   outline: 2px solid var(--paper-accent);
   outline-offset: 4px;
 }
@@ -453,17 +465,15 @@
   height: 100%;
 }
 
+/* 名字寫在照片下方的本子上 */
 .polaroid__name {
-  position: absolute;
-  right: 4px;
-  bottom: 6px;
-  left: 4px;
+  width: 100%;
   overflow: hidden;
-  font: 14px var(--font-paper);
+  font: 700 20px var(--font-hand);
   white-space: nowrap;
   text-overflow: ellipsis;
   text-align: center;
-  color: var(--paper-accent);
+  color: var(--color-bg-deepest); /* tokens.css 裡最接近黑色的顏色 */
 }
 
 /* 右頁補位用的空格：佔位置但看不見 */
@@ -471,20 +481,16 @@
   visibility: hidden;
 }
 
-.polaroid--add {
+.polaroid--add .polaroid__frame {
   border: 2px dashed var(--paper-line);
   background: transparent;
   box-shadow: none;
   transform: none;
 }
 
-.polaroid--add::before,
-.polaroid--add::after {
+.polaroid--add .polaroid__frame::before,
+.polaroid--add .polaroid__frame::after {
   display: none;
-}
-
-.polaroid--add:hover {
-  transform: translateY(-3px);
 }
 
 .polaroid--add .polaroid__photo {
@@ -492,7 +498,7 @@
   background: color-mix(in srgb, var(--paper-gold) 60%, transparent);
   color: var(--paper-ink);
   font:
-    300 44px/1 system-ui,
+    300 56px/1 system-ui,
     sans-serif;
 }
 
@@ -640,8 +646,8 @@
 }
 
 .id-card__line--big input {
-  font-size: 42px;
-  letter-spacing: 0.25em;
+  font-size: 34px;
+  letter-spacing: 0.18em;
 }
 
 .id-card__foot {

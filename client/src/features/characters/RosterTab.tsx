@@ -4,8 +4,8 @@ import { PageHeading, Silhouette } from './fields';
 import { SLOTS_PER_PAGE, SLOTS_PER_SPREAD, pageCount } from './roster';
 
 // 調查員分頁（總覽）：照桌面「調查員檔案」原型的拍立得照片牆。
-// 每頁 4 欄 × 3 列拍立得（上下置中），最後一格是「新增」。
-// 先擺左頁；超過 12 格時接著擺右頁；左右兩頁都滿了才翻到下一頁。
+// 每頁 3 欄 × 2 列拍立得（上下置中），名字寫在照片下方的本子上，最後一格是「新增」。
+// 先擺左頁；超過 6 格時接著擺右頁；左右兩頁都滿了才翻到下一頁。
 
 const ADD_SLOT = 'add' as const;
 type Slot = Character | typeof ADD_SLOT;
@@ -45,7 +45,9 @@ export default function RosterTab({
         aria-label="新增調查員"
         onClick={onCreate}
       >
-        <span className="polaroid__photo">＋</span>
+        <span className="polaroid__frame">
+          <span className="polaroid__photo">＋</span>
+        </span>
         <span className="polaroid__name">新增</span>
       </button>
     ) : (
@@ -57,8 +59,10 @@ export default function RosterTab({
         aria-label={`開啟調查員 ${slot.name || '未命名調查員'}`}
         onClick={() => onPick(slot.id)}
       >
-        <span className="polaroid__photo">
-          {slot.portraitUrl ? <img src={slot.portraitUrl} alt="" /> : <Silhouette />}
+        <span className="polaroid__frame">
+          <span className="polaroid__photo">
+            {slot.portraitUrl ? <img src={slot.portraitUrl} alt="" /> : <Silhouette />}
+          </span>
         </span>
         <span className="polaroid__name">{slot.name || '未命名'}</span>
       </button>
@@ -99,10 +103,13 @@ export default function RosterTab({
         {right.length > 0 && (
           <div className="roster">
             {right.map((slot, index) => renderSlot(slot, SLOTS_PER_PAGE + index))}
-            {/* 補滿 12 格看不見的空位，讓右頁從左上排到右下，列的位置也和左頁對齊 */}
+            {/* 補滿 6 格看不見的空位，讓右頁從左上排到右下，列的位置也和左頁對齊 */}
             {Array.from({ length: SLOTS_PER_PAGE - right.length }, (_, index) => (
               <span key={`empty-${index}`} className="polaroid polaroid--empty" aria-hidden="true">
-                <span className="polaroid__photo" />
+                <span className="polaroid__frame">
+                  <span className="polaroid__photo" />
+                </span>
+                <span className="polaroid__name">&nbsp;</span>
               </span>
             ))}
           </div>
