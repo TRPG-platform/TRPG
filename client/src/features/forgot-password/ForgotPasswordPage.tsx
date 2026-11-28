@@ -27,10 +27,29 @@ export default function ForgotPasswordPage() {
         ✕
       </button>
 
+      {/* 左邊標語：文案跟登入頁（Figma TV-4）一樣，兩頁切換時畫面不跳 */}
+      <section className="forgot-page__intro" aria-label="平台介紹">
+        <p className="forgot-page__eyebrow">給冒險者的共享桌面</p>
+        {/* TODO：「同一張案上」是否為「同一張桌上」，等設計組員確認（跟登入頁一起改） */}
+        <p className="forgot-page__slogan">
+          把大家的
+          <br />
+          故事放在同一張
+          <br />
+          案上。
+        </p>
+        <p className="forgot-page__description">
+          開一間遊戲房、放上地圖、選角色、擲骰子，筆記與骰子都在同一個地方，這裡專心讓冒險繼續。
+        </p>
+      </section>
+
       <section className="forgot-page__panel" aria-labelledby="forgot-title">
         <h1 id="forgot-title" className="forgot-page__title">
           忘記密碼？
         </h1>
+        <p className="forgot-page__lead">
+          輸入註冊時用的電郵或手機號碼，我們會寄重設密碼的說明給你。
+        </p>
         <ForgotPasswordForm />
       </section>
     </main>

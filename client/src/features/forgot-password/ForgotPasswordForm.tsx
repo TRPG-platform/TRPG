@@ -29,8 +29,9 @@ export default function ForgotPasswordForm() {
   return (
     <form className="forgot-form" onSubmit={handleSubmit} noValidate>
       <div className="forgot-form__field">
-        <label htmlFor="forgot-contact" className="forgot-form__label">
-          {/* 名片小圖示，只是裝飾 */}
+        <label htmlFor="forgot-contact">電郵或手機號碼</label>
+        <div className="forgot-form__input-wrap">
+          {/* 名片小圖示，放在輸入框裡面，只是裝飾 */}
           <svg
             className="forgot-form__icon"
             viewBox="0 0 24 24"
@@ -42,26 +43,25 @@ export default function ForgotPasswordForm() {
             <path className="forgot-form__icon-cut" d="M4.5 16a3.5 3.5 0 0 1 7 0z" />
             <path className="forgot-form__icon-line" d="M14 9h5M14 12h5M14 15h3" />
           </svg>
-          <span className="forgot-form__label-text">電郵或手機號碼</span>
-        </label>
-        <input
-          id="forgot-contact"
-          name="contact"
-          type="text"
-          inputMode="email"
-          autoComplete="username"
-          placeholder="輸入電郵或手機號碼"
-          value={contact}
-          onChange={(event) => setContact(event.target.value)}
-          aria-invalid={error ? true : undefined}
-          aria-describedby={error ? 'forgot-contact-error' : undefined}
-        />
+          <input
+            id="forgot-contact"
+            name="contact"
+            type="text"
+            inputMode="email"
+            autoComplete="username"
+            placeholder="例如 player@takoyaki.tw"
+            value={contact}
+            onChange={(event) => setContact(event.target.value)}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? 'forgot-contact-error' : undefined}
+          />
+        </div>
+        {error && (
+          <p id="forgot-contact-error" className="forgot-form__error">
+            ⚠ {error}
+          </p>
+        )}
       </div>
-      {error && (
-        <p id="forgot-contact-error" className="forgot-form__error">
-          ⚠ {error}
-        </p>
-      )}
 
       <button type="submit" className="forgot-form__submit">
         重設密碼
