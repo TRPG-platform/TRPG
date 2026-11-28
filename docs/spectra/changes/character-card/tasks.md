@@ -6,11 +6,11 @@
 
 ## 2. 前端票（第一階段，先用假資料）
 
-- [ ] 2.1 照 p1_TV-09.png 做 My characters list：筆記本外觀、每跨頁 8 張、搜尋、「點此新增調查員檔案」新增並開啟編輯器；驗證：假資料下比對設計圖，搜尋「警察」只剩相符角色
+- [ ] 2.1 照 p1_TV-09.png 做 My characters list：筆記本外觀、每頁 6 張（3 欄 × 2 列，先排左頁再排右頁，兩頁都滿才翻頁）、名字寫在照片下方、搜尋、「點此新增調查員檔案」新增並開啟編輯器；驗證：假資料下比對設計圖，搜尋「警察」只剩相符角色
 - [ ] 2.2 依「採用角色數值板 8 分頁版本」與「分兩階段交付」做 Notebook editor tabs 外框（8 個側邊分頁都在，第二階段的 3 頁先顯示「即將推出」）與調查員、身分分頁；驗證：比對 char_0-overview.png、char_1-identity.png，切換分頁輸入不遺失 [after: 2.1]
 - [ ] 2.3 做數值分頁（九項屬性、HP／MP／SAN／LUCK 的 −/+、體格、傷害加成、移動力、傷勢、瘋狂狀態），試算值用 1.2 的共用函式；驗證：比對 char_2-stats.png，STR 45→50 時困難值顯示 25 [after: 2.2, 1.2]
 - [ ] 2.4 做技能一、技能二分頁（分組、搜尋、只看有加點、其他／其他語言自訂列、點數使用量），試算值用 1.3 的共用函式；驗證：比對 char_3-skills1.png、char_4-skills2.png，「只看有加點」只剩有加點的列 [after: 2.2, 1.3]
-- [ ] 2.5 依「自動存檔防抖 2 秒」做 Save with server-computed values 的前端：自動存檔、存檔印章、被拒時保留輸入並顯示訊息（假資料層模擬成功與被拒）；驗證：手動走過 Auto save 與 Rejected save 情境 [after: 2.3, 2.4]
+- [ ] 2.5 依「按確定才存檔」做 Save with server-computed values 與 Leave with unsaved edits 的前端：確定新增／確定修改按鈕、「確定修改？」與「確定離開？」視窗（用 ConfirmDialog）、尚未儲存提示、被拒時保留輸入並顯示訊息（假資料層模擬成功與被拒）；驗證：手動走過 Save with 確定修改、No automatic save、Cancel leaving、Leave a new character、Rejected save 情境 [after: 2.3, 2.4]
 
 ## 3. 後端票
 
@@ -19,7 +19,7 @@
 
 ## 4. 串接票
 
-- [ ] 4.1 列表、編輯器、自動存檔改接 API，以伺服器回傳的衍生數值為準；驗證：`VITE_DATA_SOURCE=api` 時手動走過 Auto save 與 Rejected save [after: 2.5, 3.1]
+- [ ] 4.1 列表、編輯器、確定新增／確定修改存檔改接 API，以伺服器回傳的衍生數值為準；離開時取消新增的角色要呼叫 DELETE；驗證：`VITE_DATA_SOURCE=api` 時手動走過 Save with 確定修改、Leave a new character 與 Rejected save [after: 2.5, 3.1]
 - [ ] 4.2 刪除與角色摘要改接 API；驗證：使用中角色刪除時顯示拒絕訊息，摘要在房間大廳顯示 HP、SAN 與簡介開頭 [after: 4.1, 3.2]
 
 ## 5. 第二階段（12/24 之後）
