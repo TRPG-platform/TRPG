@@ -1,0 +1,36 @@
+.pl-lobby-page__empty {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  padding: 48px 0;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  text-align: center;
+}
+
+.pl-lobby-page__empty p {
+  margin: 0;
+}
+
+.pl-lobby-page__empty-button {
+  padding: 6px 18px;
+  border: 1px solid var(--color-primary-light);
+  border-radius: 4px;
+  background: none;
+  color: var(--color-text-primary);
+  font: inherit;
+  cursor: pointer;
+}
+
+.pl-lobby-page__empty-button:focus-visible {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: 2px;
+}
+
+.pl-lobby-page__message {
+  margin: 0;
+  padding: 120px 24px;
+  color: var(--color-text-secondary);
+  text-align: center;
+}

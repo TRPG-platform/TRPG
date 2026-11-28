@@ -1,0 +1,36 @@
+.game-settings {
+  height: 100%;
+  padding: 22px 28px;
+  overflow-y: auto;
+  border-radius: 4px;
+  background: var(--color-bg-panel);
+}
+
+.game-settings__title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.game-settings__rule {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  margin-top: 36px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.game-settings__label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.game-settings__switches {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+  padding-right: 16px;
+}

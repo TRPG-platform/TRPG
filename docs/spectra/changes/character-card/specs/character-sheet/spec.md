@@ -43,17 +43,36 @@ The editor SHALL present the character as an open notebook with eight side tabs 
 
 ### Requirement: Save with server-computed values
 
-Edits SHALL be saved by the 存檔 stamp and automatically 2 seconds after the last change. Every save SHALL send only raw inputs; the server SHALL compute and return all derived values defined in percentile-rules, and the editor SHALL display the returned values. A rejected save SHALL keep the user's inputs and show the server's message next to the field.
+Edits SHALL NOT be saved automatically. While editing, the top-right button SHALL read 確定新增 for a character just created from the list, and 確定修改 for an existing character; the page SHALL show 尚未儲存 while there are unsaved edits. 確定新增 SHALL save and return to the 調查員 overview. 確定修改 SHALL first ask 確定修改？ in a confirmation dialog, then save and return to the overview; with no edits it SHALL return to the overview without asking. Every save SHALL send only raw inputs; the server SHALL compute and return all derived values defined in percentile-rules, and the editor SHALL display the returned values. A rejected save SHALL keep the user's inputs and show the server's message next to the field.
 
-#### Scenario: Auto save
+#### Scenario: Save with 確定修改
 
-- **WHEN** the user changes STR from 45 to 50 and waits 2 seconds
-- **THEN** the change is saved and the hard value shown becomes 25 as returned by the server
+- **WHEN** the user changes STR from 45 to 50, clicks 確定修改, and confirms
+- **THEN** the change is saved, the overview is shown, and the hard value becomes 25 as returned by the server
+
+#### Scenario: No automatic save
+
+- **WHEN** the user changes STR from 45 to 50 and waits without clicking 確定修改
+- **THEN** nothing is saved and the page shows 尚未儲存
 
 #### Scenario: Rejected save
 
 - **WHEN** a save is rejected with 職業點數超出上限
 - **THEN** the typed skill points remain on screen and the message appears above the skill table
+
+### Requirement: Leave with unsaved edits
+
+When the user tries to leave the editor without saving — by the 調查員 tab, the navigation bar's back button, a navigation bar link, or the browser's back button — and the character is newly created or has unsaved edits, the page SHALL ask 確定離開？ in a confirmation dialog. 取消 SHALL keep the user on the editor with the edits intact. 確定離開 SHALL discard the edits; for a character created but not yet confirmed with 確定新增, it SHALL also delete that character.
+
+#### Scenario: Cancel leaving
+
+- **WHEN** the user edits an existing character, clicks the 調查員 tab, and chooses 取消
+- **THEN** the editor stays open with the edits intact
+
+#### Scenario: Leave a new character
+
+- **WHEN** the user creates a character, then clicks 首頁 in the navigation bar and chooses 確定離開
+- **THEN** the new character is deleted and the home page opens
 
 ### Requirement: Delete a character
 

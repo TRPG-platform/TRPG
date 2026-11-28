@@ -1,0 +1,83 @@
+.character-summary__head {
+  display: flex;
+  gap: 14px;
+}
+
+.character-summary__portrait {
+  display: block;
+  flex: none;
+  width: 93px;
+  height: 93px;
+  border-radius: 4px;
+  background: var(--color-text-secondary);
+  object-fit: cover;
+}
+
+.character-summary__name {
+  margin: 8px 0 0;
+  font-size: 20px;
+  line-height: 1.4;
+}
+
+.character-summary__occupation {
+  margin: 2px 0 0;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+}
+
+.character-summary__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.character-summary__stat {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  border-radius: 4px;
+  background: var(--color-bg-panel-raised);
+  font-size: 12px;
+}
+
+/* TODO：HP 愛心的粉紅色沒有設計變數，先用淺紫代替 */
+.character-summary__hp-icon,
+.character-summary__san-icon {
+  color: var(--color-primary-light);
+}
+
+.character-summary__profile {
+  margin-top: 8px;
+  padding: 8px 17px 9px;
+  border: 1px solid var(--color-primary);
+  border-radius: 4px;
+}
+
+.character-summary__profile-title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.character-summary__summary {
+  margin: 6px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.character-summary__selected {
+  margin: 10px 0 0;
+  padding: 7px 0;
+  border-radius: 4px;
+  background: var(--color-primary);
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}

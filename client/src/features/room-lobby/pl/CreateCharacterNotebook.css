@@ -1,0 +1,26 @@
+/* PL 大廳「建立新角色」彈窗。筆記本本身的樣式來自 characters/CharactersPage.css。 */
+
+.create-notebook {
+  position: fixed;
+  z-index: 15; /* 在 LobbyNotice（10）之上、ConfirmDialog（20）之下 */
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: color-mix(in srgb, var(--color-bg-deepest) 80%, transparent);
+}
+
+.create-notebook__window {
+  width: 100%;
+  max-width: 1600px;
+  height: 100%;
+  max-height: 940px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  background: var(--color-bg-page);
+}
+
+.create-notebook__top {
+  padding-top: 12px;
+}

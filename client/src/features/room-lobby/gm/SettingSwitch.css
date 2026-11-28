@@ -1,0 +1,48 @@
+.setting-switch {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.setting-switch__label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.setting-switch__track {
+  position: relative;
+  flex: none;
+  width: 27px;
+  height: 14px;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: var(--color-bg-panel-raised);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.setting-switch__track[aria-checked='true'] {
+  background: var(--color-primary);
+}
+
+.setting-switch__track:focus-visible {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: 3px;
+}
+
+.setting-switch__knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-text-primary);
+  transition: transform 0.15s;
+}
+
+.setting-switch__track[aria-checked='true'] .setting-switch__knob {
+  transform: translateX(13px);
+}
