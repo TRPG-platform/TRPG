@@ -48,7 +48,7 @@ export default function ForgotPasswordPage() {
           忘記密碼？
         </h1>
         <p className="forgot-page__lead">
-          輸入註冊時用的電郵或手機號碼，我們會寄重設密碼的說明給你。
+          輸入註冊時的 Email，我們會寄一封重設密碼的連結給你。
         </p>
         <ForgotPasswordForm />
       </section>
