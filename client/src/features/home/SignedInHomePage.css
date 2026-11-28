@@ -1,0 +1,279 @@
+/*
+ * 登入後首頁（Figma TV-2，畫面寬 1280px 量測）。只用 tokens.css 的設計變數。
+ * - 主視覺：高約 365px、外圍金色細框；左側深色、右側圖片往左漸層
+ * - 近期開團：標題 Noto Serif TC 700；卡片約 400×185、金色細框、圓角 8px，橫向捲動
+ */
+
+.signed-in-home {
+  min-height: 100vh;
+}
+
+/* ===== 主視覺 ===== */
+.signed-in-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 365px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-accent-gold) 45%, transparent);
+  background: var(--color-bg-deepest);
+}
+
+/* 右側圖片區（城堡圖素材到位前用漸層佔位），往左漸層成深色 */
+.signed-in-hero__art {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 58%;
+  background:
+    radial-gradient(
+      ellipse at 70% 40%,
+      color-mix(in srgb, var(--color-accent-gold) 35%, transparent),
+      transparent 60%
+    ),
+    linear-gradient(160deg, var(--color-bg-panel-raised), var(--color-bg-panel) 70%);
+  mask-image: linear-gradient(to right, transparent, black 35%);
+}
+
+.signed-in-hero__content {
+  position: relative;
+  padding: 48px clamp(24px, 7.9vw, 101px);
+}
+
+.signed-in-hero__title {
+  margin: 0 0 22px;
+  font-size: clamp(30px, 3.2vw, 41px);
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  color: var(--color-text-primary);
+}
+
+.signed-in-hero__subtitle {
+  margin: 0 0 26px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--color-text-secondary);
+}
+
+.signed-in-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+}
+
+.hero-button {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  min-width: 150px;
+  height: 41px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-button);
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.hero-button--primary {
+  background: var(--color-accent-gold);
+  color: var(--color-bg-page);
+}
+
+.hero-button--secondary {
+  border-color: var(--color-accent-gold);
+  background: var(--color-bg-panel-raised);
+  color: var(--color-text-primary);
+}
+
+.hero-button--secondary svg {
+  color: var(--color-accent-gold);
+}
+
+.hero-button:hover {
+  filter: brightness(1.08);
+}
+
+.hero-button:focus-visible,
+.recruiting-card:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* ===== 近期開團 ===== */
+.recruiting {
+  padding: 48px 0 56px;
+}
+
+/* 標題＋排序選單同一列，選單靠右；左右邊距和卡片列相同，標題對齊第一張卡片 */
+.recruiting__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 22px;
+  padding: 0 43px;
+}
+
+.recruiting__sort {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 15px;
+  color: var(--color-text-secondary);
+}
+
+.recruiting__sort select {
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  background: var(--color-bg-panel);
+  font: inherit;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.recruiting__sort select:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.recruiting__title {
+  margin: 0;
+  font-size: 32px;
+  letter-spacing: 0.04em;
+  color: var(--color-text-primary);
+}
+
+.recruiting__message {
+  margin: 0 0 16px;
+  color: var(--color-text-secondary);
+}
+
+.recruiting__empty {
+  padding-left: 43px;
+}
+
+.recruiting__row {
+  display: flex;
+  gap: 40px;
+  padding: 0 43px 14px;
+  overflow-x: auto;
+  scroll-padding-inline: 43px;
+  scroll-snap-type: x mandatory;
+  scrollbar-color: var(--color-border) transparent;
+  scrollbar-width: thin;
+}
+
+.recruiting-card {
+  position: relative;
+  display: flex;
+  flex: 0 0 400px;
+  height: 185px;
+  overflow: hidden;
+  border: 1px solid var(--color-accent-gold);
+  border-radius: var(--radius-button);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  scroll-snap-align: start;
+}
+
+.recruiting-card__cover {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-panel-raised),
+    var(--color-bg-panel) 55%,
+    var(--color-border)
+  );
+  transition: transform 0.3s;
+}
+
+.recruiting-card__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 下半部加深，讓文字看得清楚 */
+.recruiting-card__cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 25%,
+    color-mix(in srgb, var(--color-bg-deepest) 85%, transparent)
+  );
+}
+
+.recruiting-card:hover .recruiting-card__cover {
+  transform: scale(1.04);
+}
+
+.recruiting-card__rule {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--color-accent-gold);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-bg-page);
+}
+
+.recruiting-card__body {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 18px 18px 20px;
+}
+
+.recruiting-card__title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.recruiting-card__meta {
+  margin: 4px 0 22px;
+  font-size: 12.5px;
+  color: var(--color-text-secondary);
+}
+
+.recruiting-card__footer {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  font-size: 11.5px;
+  color: var(--color-text-secondary);
+}
+
+.recruiting-card__info {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.recruiting-card__tag {
+  margin-left: auto;
+  padding: 2px 16px;
+  border-radius: 3px;
+  background: var(--color-primary);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recruiting-card__cover {
+    transition: none;
+  }
+}

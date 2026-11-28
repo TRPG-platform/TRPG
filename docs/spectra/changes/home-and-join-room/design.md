@@ -43,8 +43,8 @@ TV-1 是首頁主視覺全滿版版本，TV-2 是含「近期開團」的捲動�
 
 ## Implementation Contract
 
-- **行為**：首頁顯示主視覺、兩顆按鈕、最多 4 張近期開團卡片；加入房間頁可用房號加入；`/join/<roomCode>` 可直接加入。
-- **API**：`GET /api/rooms/recruiting` 回傳卡片所需欄位陣列（依開團時間排序、最多 4 筆）；`POST /api/rooms/join { roomCode }` 成功回 `{ roomId, destination: "lobby" | "game" }`，失敗回 404（找不到）或 409 加 `reason: "full" | "playing" | "ended"`。
+- **行為**：首頁顯示主視覺、兩顆按鈕、近期開團卡片（不限張數、橫向捲動、可切換排序）；加入房間頁可用房號加入；`/join/<roomCode>` 可直接加入。
+- **API**：`GET /api/rooms/recruiting?sort=scheduled|created` 回傳卡片所需欄位陣列（含 `createdAt`；`scheduled` 依開團時間由近到遠、`created` 依建立時間由新到舊；不限筆數）；`POST /api/rooms/join { roomCode }` 成功回 `{ roomId, destination: "lobby" | "game" }`，失敗回 404（找不到）或 409 加 `reason: "full" | "playing" | "ended"`。
 - **失敗模式**：拒絕時頁面保留輸入的房號並顯示對應訊息。
 - **驗收**：用 mock 資料走完 join-room 規格的拒絕原因表四列；兩個瀏覽器同時搶最後一席，只有一人成功。
 - **範圍內**：首頁、加入房間頁、邀請連結路由、上述兩支 API。
@@ -56,6 +56,8 @@ TV-1 是首頁主視覺全滿版版本，TV-2 是含「近期開團」的捲動�
 
 ## Open Questions
 
-無。2026-11-21 已決定：規則標籤照設計稿顯示（例如 CoC 7e）；近期開團最多 4 張。
+無。2026-11-21 已決定：規則標籤照設計稿顯示（例如 CoC 7e）。
+
+2026-11-27 改為：近期開團不限張數、橫向捲動；標題旁加排序選單（遊玩時間／房間建立時間，預設遊玩時間）。取代 11-21「近期開團最多 4 張」的決定。
 
 
