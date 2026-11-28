@@ -6,7 +6,7 @@ The character sheet lets a player create, view, edit, and delete their investiga
 
 ### Requirement: My characters list
 
-The 我的角色卡 page SHALL show the current user's characters as cards with portrait (or a placeholder silhouette), name, occupation, and up to three tags, 8 cards per notebook spread, with previous/next page controls when there are more. A search box SHALL filter by name, occupation, or tag. The first card slot SHALL be 點此新增調查員檔案, which creates a new character and opens the editor.
+The 我的角色卡 page SHALL show the current user's characters as cards with portrait (or a placeholder silhouette), name, occupation, and up to three tags, 6 cards per notebook page (3 columns × 2 rows) with the name written on the page below each portrait. Cards SHALL fill the left page first, then the right page from top left to bottom right; previous/next page controls SHALL appear only when both pages are full. A search box SHALL filter by name, occupation, or tag. The first card slot SHALL be 點此新增調查員檔案, which creates a new character and opens the editor.
 
 #### Scenario: Create from the list
 
