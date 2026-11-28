@@ -73,3 +73,157 @@ npm run format:check  # 只檢查排版，不改檔（適合送 PR 前跑）
 - 寫樣式時一律用變數，例如 `background: var(--color-bg-panel);`、`border-radius: var(--radius-card);`。
 - **不要寫死色碼**：`tokens.css` 以外的 TS/TSX 或 CSS 出現 `#fff` 這類色碼，`npm run lint` 會報錯。
 - 需要新的顏色時，請開 PR 修改 `tokens.css`，不要在自己的檔案另外定義。
+
+## 共用確認視窗（ConfirmDialog）
+
+刪除、確定離開、確定修改等「要使用者再按一次確認」的地方，一律用 `client/src/components/ConfirmDialog.tsx`，不要自己再做一個。
+
+### 怎麼呼叫
+
+1. 在頁面元件裡用一個 state 記住「視窗開著沒」，例如 `const [confirmingDelete, setConfirmingDelete] = useState(false)`。
+2. 按下按鈕時只把 state 設成 `true`，**不要**直接執行刪除。
+3. 在 JSX 裡用條件渲染放 `<ConfirmDialog>`：`onConfirm` 做真正的動作，`onCancel` 把 state 設回 `false`。
+4. 動作成功後由頁面自己關掉視窗；失敗時把錯誤訊息傳給 `error`，視窗會留著讓使用者重試。
+
+元件本身不管「什麼時候顯示」，也不會自己關閉，只負責畫面、Esc／點外面取消、打開時把焦點放在「取消」。
+
+### 參數
+
+| 參數           | 必填 | 說明                                         |
+| -------------- | ---- | -------------------------------------------- |
+| `title`        | 是   | 標題，通常是問句，例如「確定離開？」         |
+| `confirmLabel` | 是   | 確認按鈕文字，例如「確定刪除」               |
+| `onConfirm`    | 是   | 按確認時執行                                 |
+| `onCancel`     | 是   | 按取消、Esc、點視窗外面時執行                |
+| `children`     | 否   | 說明文字，放在標籤中間                       |
+| `cancelLabel`  | 否   | 取消按鈕文字，預設「取消」                   |
+| `error`        | 否   | 有值時在說明下方顯示錯誤，視窗不關閉         |
+| `busy`         | 否   | 處理中：兩個按鈕停用、Esc 與點外面無效       |
+| `busyLabel`    | 否   | `busy` 時確認按鈕顯示的文字，預設「處理中…」 |
+
+### 範例一：刪除（失敗時顯示錯誤）
+
+```tsx
+import { useState } from 'react';
+import ConfirmDialog from '../../components/ConfirmDialog';
+
+function ScriptActions({ script, onDeleted }: { script: Script; onDeleted: () => void }) {
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
+
+  const remove = async () => {
+    try {
+      await deleteScript(script.id);
+      setConfirmingDelete(false);
+      onDeleted();
+    } catch (error) {
+      setDeleteError(error instanceof Error ? error.message : '刪除失敗');
+    }
+  };
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => {
+          setDeleteError('');
+          setConfirmingDelete(true);
+        }}
+      >
+        刪除劇本
+      </button>
+
+      {confirmingDelete && (
+        <ConfirmDialog
+          title={`刪除「${script.title}」？`}
+          confirmLabel="確定刪除"
+          onConfirm={() => void remove()}
+          onCancel={() => setConfirmingDelete(false)}
+          error={deleteError || undefined}
+        >
+          劇本的所有資料都會刪除，無法復原。
+        </ConfirmDialog>
+      )}
+    </>
+  );
+}
+```
+
+### 範例二：存檔（處理中停用按鈕）
+
+```tsx
+const [confirmingSave, setConfirmingSave] = useState(false);
+const [saving, setSaving] = useState(false);
+const [saveError, setSaveError] = useState('');
+
+const save = async () => {
+  setSaving(true);
+  setSaveError('');
+  try {
+    await saveScript(draft);
+    setConfirmingSave(false);
+  } catch {
+    setSaveError('存檔失敗，請再試一次。');
+  } finally {
+    setSaving(false);
+  }
+};
+
+return (
+  <>
+    <button type="button" onClick={() => setConfirmingSave(true)}>
+      確定修改
+    </button>
+
+    {confirmingSave && (
+      <ConfirmDialog
+        title="確定修改？"
+        confirmLabel="確定修改"
+        onConfirm={() => void save()}
+        onCancel={() => setConfirmingSave(false)}
+        busy={saving}
+        busyLabel="存檔中…"
+        error={saveError || undefined}
+      >
+        修改會儲存並回到列表。
+      </ConfirmDialog>
+    )}
+  </>
+);
+```
+
+### 範例三：有未存修改時，離開前確認
+
+導覽列連結、瀏覽器上一頁用 React Router 的 `useBlocker` 擋下；導覽列返回鍵用 `TopNav` 的 `onBack`（#39 合併後可用，見「導覽列的返回鍵」）。
+
+```tsx
+import { useBlocker } from 'react-router';
+
+const blocker = useBlocker(dirty); // 有未存的修改才擋
+
+return (
+  <>
+    {/* …頁面內容… */}
+
+    {blocker.state === 'blocked' && (
+      <ConfirmDialog
+        title="確定離開？"
+        confirmLabel="確定離開"
+        onConfirm={() => blocker.proceed()}
+        onCancel={() => blocker.reset()}
+      >
+        這次的修改還沒儲存，離開後不會保存。
+      </ConfirmDialog>
+    )}
+  </>
+);
+```
+
+完整的實際用法可以參考角色卡 `client/src/features/characters/CharactersPage.tsx`（刪除、確定修改、確定離開三種都有）。
+
+### 注意
+
+- 只要「再按一次確認」都用這個元件，不要用瀏覽器的 `window.confirm()`，也不要自己再寫一個視窗。
+- 不要在 `onConfirm` 裡無條件關掉視窗：失敗時要留著並顯示 `error`。
+- 視窗文字照「標題問句＋一句後果說明＋動作按鈕」的格式，例如「刪除「…」？／無法復原。／確定刪除」。
+- 關掉分頁或重新整理不會經過這個視窗（瀏覽器限制）。
