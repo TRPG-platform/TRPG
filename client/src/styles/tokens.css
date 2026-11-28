@@ -26,6 +26,7 @@
   --color-primary-button: #9566c2; /* 按鈕紫 */
   --color-primary-light: #c4a0d3; /* 淺紫 */
   --color-accent-gold: #e8d1a5; /* 強調金（GM、標題、選取狀態） */
+  --color-accent-orange: #ffad66; /* GM 聊天名稱 */
 
   /* ===== 顏色：狀態 ===== */
   /* 狀態不能只靠顏色區分，要搭配圖示或文字（開發注意事項第 11 節） */

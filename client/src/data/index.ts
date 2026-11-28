@@ -1,5 +1,6 @@
 import type { HealthResponse } from '@takoyaki/shared';
 import { resolveDataSource } from './config';
+import { createGameRoomPreview } from './gameRoomMock';
 import { sampleCharacter, sampleRoom, sampleScript } from './mock';
 
 export const dataSource = resolveDataSource(import.meta.env.VITE_DATA_SOURCE);
@@ -27,4 +28,10 @@ export function getMockPreview() {
   return dataSource === 'mock'
     ? structuredClone({ script: sampleScript, character: sampleCharacter, room: sampleRoom })
     : null;
+}
+
+export type { GameRoomPreview } from './gameRoomMock';
+
+export function getGameRoomPreview() {
+  return dataSource === 'mock' ? createGameRoomPreview() : null;
 }
